@@ -1,18 +1,17 @@
 {
-    "homepage": "https://github.com/mqshen/lily"
+    "name": "lily",
+    "keywords": [
+        "lily"
+    ],
+    "homepage": "https://github.com/mqshen/lily",
     "author": {
         "name": "mqshen"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/mqshen/lily.gi"
+        "url": "https://github.com/mqshen/lily.git"
     }
-    "name": "lily",
-    "keywords": [
-        "lily"
-    ],
     "license": "MIT",
-    "ignore": [],
     "description": "a js framework.",
     "version": "0.0.1",
     "main": ["./lily.js"],
