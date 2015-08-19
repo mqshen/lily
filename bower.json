@@ -1,0 +1,18 @@
+{
+    "homepage": "https://github.com/mqshen/lily"
+    "author": {
+        "name": "mqshen"
+    },
+    "name": "lily",
+    "keywords": [
+        "lily"
+    ],
+    "license": "MIT",
+    "ignore": [],
+    "description": "a js framework.",
+    "version": "0.0.1",
+    "main": ["./lily.js"],
+    "dependencies": {
+        "jquery": ">=2.1.3"
+    }
+}
