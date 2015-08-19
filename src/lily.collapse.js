@@ -1,6 +1,6 @@
 !function(){
 
-    "use strict"
+    "use strict";
 
     var Collapse = function(element, options) {
         this.$element = $(element)
@@ -124,10 +124,15 @@
         }
 
 
-
+    }
+    function getTargetFromTrigger($trigger) {
+      var href 
+      var target = $trigger.attr('data-target') 
+        || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+      return $(target) 
     }
 
-    $.fn.collapse = function ( option ) {
+    function Plugin( option ) {
         return this.each(function () {
             var $this = $(this), 
                 data = $this.data('collapse'), 
@@ -144,6 +149,7 @@
         loadingText: 'loading...'
     }
     
+    $.fn.collapse             = Plugin
     $.fn.collapse.Constructor = Collapse 
 
     $(document).on('click.collapse.data-api', '[data-toggle^=collapse]', function (e) {

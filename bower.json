@@ -3,6 +3,10 @@
     "author": {
         "name": "mqshen"
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mqshen/lily.gi"
+    }
     "name": "lily",
     "keywords": [
         "lily"

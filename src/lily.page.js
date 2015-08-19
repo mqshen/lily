@@ -1,6 +1,6 @@
 !function(){
 
-    "use strict"
+    "use strict";
 
     var Page = function(element, options) {
         this.$element = $(element);
@@ -45,8 +45,8 @@
                 if(self.options.type === 'page') {
                     self.totalElement = responseData["page.total"];
                 } else {
-                    self.lastFlowNo = responseData["lastFlowNum"];
-                    if(self.lastFlowNo == '') {
+                    self.lastFlowNum = responseData.lastFlowNum;
+                    if(self.lastFlowNum === '') {
                         self.hasMore = false;
                     }
                 }
@@ -61,7 +61,7 @@
             if(self.options.type === 'page') {
                 requestData = $.extend({"page.page": this.page , "page.size" : self.options.size}, this.options.requestData);
             } else {
-                requestData = $.extend({"lastFlowNum": this.lastFlowNo}, this.options.requestData);
+                requestData = $.extend({"lastFlowNum": this.lastFlowNum}, this.options.requestData);
             }
             $.lily.ajax({url: this.options.url,
                 data: requestData,

@@ -7,6 +7,8 @@
  */
  
 (function( $, undefined ) {
+	"use strict";
+
 	if(!Function.bind) {
 
 		Function.prototype.update = function(array, args) {
@@ -178,7 +180,7 @@
 		REGEXP_POSITIVENUMBER : new RegExp(/^[1-9][0-9]*$/),		
 		REGEXP_ODDNUMBER : new RegExp(/^[A-Za-z0-9]*$/),
 		isEmpty: function(s) {
-			return ( s == null || s.length == 0 );
+			return ( s == null || s.length === 0 );
 		},
 
 		isInteger: function(s) {
@@ -293,7 +295,7 @@
 		/**
 		 * 检查日期格式是否正确
 		 */
-		isDate:function(date,format){
+		isDate:function(date){
 			return ($.lily.format.REGEXP_DATEFORMAT.test(date));
 		},
 		
@@ -318,7 +320,7 @@
 		        return false;
 		    }
 		    // 检查区域代码是否合法
-		    var areaCode = parseInt( s.substr(0,2) );
+		    var areaCode = parseInt( s.substr(0,2), 10);
 		    if( !$.lily.format.AREA_CODE[areaCode] ) {
 		        return false;
 		    }
@@ -330,16 +332,16 @@
 		    }
 		    // 检查校验位是否合法
 		    if ( s.length==18 ){
-		    	var testNumber = ( parseInt(s.charAt(0)) + parseInt(s.charAt(10)) ) * 7
-		            + ( parseInt(s.charAt(1)) + parseInt(s.charAt(11)) ) * 9
-		            + ( parseInt(s.charAt(2)) + parseInt(s.charAt(12)) ) * 10
-		            + ( parseInt(s.charAt(3)) + parseInt(s.charAt(13)) ) * 5
-		            + ( parseInt(s.charAt(4)) + parseInt(s.charAt(14)) ) * 8
-		            + ( parseInt(s.charAt(5)) + parseInt(s.charAt(15)) ) * 4
-		            + ( parseInt(s.charAt(6)) + parseInt(s.charAt(16)) ) * 2
-		            + parseInt(s.charAt(7)) * 1
-		            + parseInt(s.charAt(8)) * 6
-		            + parseInt(s.charAt(9)) * 3 ;
+		    	var testNumber = ( parseInt(s.charAt(0), 10) + parseInt(s.charAt(10), 10) ) * 7
+		            + ( parseInt(s.charAt(1), 10) + parseInt(s.charAt(11), 10) ) * 9
+		            + ( parseInt(s.charAt(2), 10) + parseInt(s.charAt(12), 10) ) * 10
+		            + ( parseInt(s.charAt(3), 10) + parseInt(s.charAt(13), 10) ) * 5
+		            + ( parseInt(s.charAt(4), 10) + parseInt(s.charAt(14), 10) ) * 8
+		            + ( parseInt(s.charAt(5), 10) + parseInt(s.charAt(15), 10) ) * 4
+		            + ( parseInt(s.charAt(6), 10) + parseInt(s.charAt(16), 10) ) * 2
+		            + parseInt(s.charAt(7), 10) * 1
+		            + parseInt(s.charAt(8), 10) * 6
+		            + parseInt(s.charAt(9), 10) * 3 ;
 		        if ( s.charAt(17) != "10X98765432".charAt( testNumber % 11 ) ){
 		            return false;
 		        }
@@ -386,7 +388,7 @@
 		},
 		
 		formatDate: function(date, outFormat ) {
-			if(date == '' || date == null){
+			if(date === '' || date == null){
 				return '';
 			}
 			else {
@@ -422,7 +424,8 @@
             a = "" + e;
             if (e instanceof Date) 
                 r = e.getHours(), s = e.getMinutes(), u = e.getSeconds()
-            else if (i = a.match(pattern)) 
+            else {
+                i = a.match(pattern)
                 f = i[0], 
                 r = i[1], 
                 s = i[2], 
@@ -435,6 +438,7 @@
                 o = n != null ? n.match(/p/i) : void 0, 
                 1 <= r && r <= 11 && o && (r += 12), 
                 r === 12 && t && (r = 0) 
+            }
             var hour = r != null ? r : 0
             var minute = s != null ? s : 0
             var second = u != null ? u : 0
@@ -444,6 +448,7 @@
                 i <= 59 && 0 <= (s = second) && 
                 s <= 59)) 
                 throw Error("invalid time (" + hour + ", " + minute + ", " + second + ")");
+            var ampm, hour12;
             ampm = hour < 12 ? "am" : "pm", 
             hour === 0 ? hour12 = 12 : hour > 12 ? hour12 = hour - 12 : hour12 = hour
             function normalizeFormat(e) {
@@ -478,7 +483,7 @@
 				var mod = str.length % 3;
 				var output = (mod > 0 ? (str.substring(0,mod)) : '');
 				for (var i=0 ; i < Math.floor(str.length / 3); i++) {
-					if ((mod == 0) && (i == 0))
+					if ((mod === 0) && (i === 0))
 						output += str.substring(mod+ 3 * i, mod + 3 * i + 3);
 					else
 						output += ',' + str.substring(mod + 3 * i, mod + 3 * i + 3);
@@ -490,9 +495,9 @@
 		},
 
 		prepareCashString: function( cash, dot, digits ) {
-			if (cash == undefined) cash = '0';
-			if (dot == undefined) dot = true;
-			if (digits == undefined) digits = 2;
+			if (cash === undefined) cash = '0';
+			if (dot === undefined) dot = true;
+			if (digits === undefined) digits = 2;
 			
 			if (typeof cash !== 'string') {
 				cash = cash.toString();
@@ -527,7 +532,7 @@
 					integerCash = cash;
 					decimalCash = '';
 				}
-				if (integerCash.length == 0)
+				if (integerCash.length === 0)
 					integerCash = '0';
 				if (decimalCash.length < digits) {
 					decimalCash += '0'.times(digits - decimalCash.length);
@@ -560,7 +565,7 @@
 		    // 每组最后加上一个单位: "[万亿]","[亿]","[万]" 
 		    for (var i = k; i > 0; i--)  {
 		        var L = 4; 
-		        if (i == k && m != 0) {
+		        if (i == k && m !== 0) {
 		            L = m;
 		        }
 		        // 得到一组四位数 最高位组有可能不足四位 
@@ -569,9 +574,9 @@
 		
 		        // 内层循环在该组中的每一位数上循环 从左到右 高位到低位 
 		        for (var j = 0;j < l;j++) {
-		            var n = parseInt(s.substring(j, j+1));
-		            if (n == 0) {
-		                if ((j < l - 1) && (parseInt(s.substring(j + 1, j + 1+ 1)) > 0) //后一位(右低) 
+		            var n = parseInt(s.substring(j, j+1), 10);
+		            if (n === 0) {
+		                if ((j < l - 1) && (parseInt(s.substring(j + 1, j + 1+ 1), 10) > 0) //后一位(右低) 
 		                    && S.substring(S.length-1,S.length) != $.lily.format.MONEY_NUMS[n]) {
 		                    S += $.lily.format.MONEY_NUMS[n];
 		                }
@@ -610,10 +615,10 @@
 			else {
 				for( var i = 0;i < cash.length; i++ ){
 					if( i >= 2 ){break;}
-					var intValue = parseInt(cash.charAt(i));
+					var intValue = parseInt(cash.charAt(i), 10);
 					switch( i ) {
 						case 0:
-							if ( intValue != 0 ){
+							if ( intValue !== 0 ){
 								returnCash += $.lily.format.MONEY_NUMS[intValue] + $.lily.format.MONEY_SHOWNAME[1];
 							}
 							break;
@@ -632,7 +637,7 @@
 			if($.lily.format.isEmpty(rate) ){
 				return '';
 			}
-			if ( parseFloat(rate) == 0 ) {
+			if ( parseFloat(rate) === 0 ) {
 				return '';
 			}
 			var temp = parseFloat(rate);
@@ -645,7 +650,7 @@
 				return '';
 			}
 			var noCommaCash = $.lily.format.prepareCashString(cash);
-			if ( parseFloat(cash) == 0 ) {
+			if ( parseFloat(cash) === 0 ) {
 				return '';
 			}
 			if( $.lily.format.isInteger( noCommaCash ) ) {
@@ -672,7 +677,7 @@
 			if (cash != null && typeof cash !== "string") {
 				cash = cash.toString();
 			}
-			if(cash == '' || cash == null){
+			if(cash === '' || cash == null){
 				return '';
 			}
 			else {
@@ -742,12 +747,12 @@
 			
 			if(!sDate.isBefore(eDate)){
 				return '开始日期不能大于结束日期！';
-			};
+			}
 			var durMonth ;
 			if($.lily.format.isEmpty(dur)){
 				durMonth = 3;
 			}else{
-				durMonth = parseInt(dur);
+				durMonth = parseInt(dur, 10);
 			}
 			if(sDate.isBefore(new Date($.lily.format.getLastMonth( endDate,durMonth).replace(/-/g,   "/")))){
 				return ('开始日期和结束日期之间的间隔不能超过'+durMonth+'月');
@@ -784,7 +789,7 @@
 					$startDate = new Date(startDate.replace(/-/g,   "/"));
 				}
 			}
-			var decMon =parseInt(decMonth) ;
+			var decMon =parseInt(decMonth, 10);
 			var month = $startDate.getMonth()+1;
 			var day = $startDate.getDate();
 			var year = $startDate.getFullYear();
@@ -799,7 +804,7 @@
 			}else{
 				month -=decMon;
 			}
-			if((year%4==0 && year%100!=0)||(year%100==0 && year%400==0)){  
+			if((year%4 === 0 && year%100 !== 0)||(year%100 === 0 && year%400 === 0)){  
 				monthHasDay[2] = 29;  
 		     }
 			day = monthHasDay[month] >= day ? day : monthHasDay[month];

@@ -7,7 +7,7 @@ var gulp = require('gulp'),
 gulp.task('lint', function() {
 
   gulp.src('./src/**.js')
-    .pipe(jshint())
+    .pipe(jshint(".jshintrc"))
     .pipe(jshint.reporter('default'));
 
 });
@@ -34,3 +34,4 @@ gulp.task('default', function(){
 
   // Watch JS Files
 });
+

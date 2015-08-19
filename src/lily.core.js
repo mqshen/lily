@@ -6,6 +6,7 @@
  */
 
 (function( $, undefined ) {
+    "use strict";
 	
 	var matched, browser;
 
@@ -95,7 +96,7 @@ $.extend( $.lily, {
 			option.data =  $.lily.collectCsrfData()
 		}
 
-		option.complete = function(xhr,textStatus) {
+		option.complete = function(xhr) {
 		    if (xhr.status == 302) {
                 location.href = xhr.getResponseHeader("Location");
             }
@@ -247,7 +248,7 @@ $.extend( $.lily, {
     	waitObj.css({
     		width: target.width(),
     		height: target.height(),
-    		float: target.css("float"),
+    		'float': target.css("float"),
             padding: target.css("padding"),
     		margin: target.css("margin")
     	})

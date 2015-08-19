@@ -7,6 +7,7 @@
  */
   
 (function( $, undefined ){
+    "use strict";
 	
 	$.lily.validator = $.lily.validator || {};
 	
@@ -166,14 +167,14 @@
                     }
                     return ( $.lily.format.isMoney( valueWithoutDot ) );
                 } ),
-                afterPass : ( function( value, fieldConfig, currentElement){
+                afterPass : ( function( value, fieldConfig){
                     fieldConfig.$element.val('');
                     fieldConfig.$element.attr("placeholder", $.lily.format.toGiftBonus(value) );
                     fieldConfig.$element.attr("data-bonus", value);
                 } ),
-                afterFail : ( function( value, fieldConfig,currentElement ){
+                afterFail : ( function( value, fieldConfig){
                     if ( fieldConfig.chineseDisplay ) {
-                        $( fieldConfig.chineseDisplay, currentElement).val( "" );
+                        $( fieldConfig.chineseDisplay).val( "" );
                     }
                 } ),
                 output : ( function( fieldConfig ) {
@@ -184,7 +185,7 @@
                     }
                     return fieldConfig.$element.attr("data-bonus");
                 } ),
-                resetter: ( function( fieldConfig, currentElement) {
+                resetter: ( function( fieldConfig) {
                     fieldConfig.$element.attr("data-bonus", 0);
                     fieldConfig.$element.attr("placeholder", $.lily.format.toGiftBonus(0) );
                 })
@@ -428,7 +429,7 @@
 				alert( "Validator: Field["+fieldConfig.id+"] not found in html!" );
 				return null;
 			}
-			fieldValue = fieldConfig.$element.val();
+			var fieldValue = fieldConfig.$element.val();
 			if(fieldConfig.formatType == "account") {
 				fieldValue = fieldValue.substring(0,fieldValue.indexOf("["));
 			}
@@ -436,7 +437,7 @@
 		},
 		
 		_errorHandler : function(errors) {
-			
+            errors;
 		},
 		
 		_requiredValidator : function(fieldValue, fieldConfig) {
@@ -570,16 +571,17 @@
 
 				var targetValue = $(targetId);
 				if ( fieldConfig.equalTo && fieldValue != targetValue  ){
-					return $.lily.validator._getErrorMessage( targetConfig, $.lily.validator.LANGUAGE_NOT_EQUAL );
+					return $.lily.validator._getErrorMessage( fieldConfig, $.lily.validator.LANGUAGE_NOT_EQUAL );
 				}
 				if ( fieldConfig.notEqualTo && fieldValue == targetValue  ){
-					return $.lily.validator._getErrorMessage( targetConfig, $.lily.validator.LANGUAGE_EQUAL );
+					return $.lily.validator._getErrorMessage( fieldConfig, $.lily.validator.LANGUAGE_EQUAL );
 				}
 			}
 			return true;
 		},
 		
-		_checkerValidator : function(fieldValue, fieldConfig, currentElement) {
+        /*
+		_checkerValidator : function(fieldValue, fieldConfig) {
 			// 自定义的校验函数
 			if ( fieldConfig.checker != null ){
 				var chekerResult = eval(fieldConfig.checker + "(fieldConfig, fieldValue, currentElement)");
@@ -590,6 +592,7 @@
 			}
 			return true;
 		},
+        */
 		
 		_relatedValidator : function(fieldValue, fieldConfig) {
 		
@@ -611,7 +614,7 @@
 				var typeDefine = $.lily.validator._typeDefine[fieldConfig.type];
 				if ( typeDefine ){
 					if ( typeDefine.resetter ) {
-						result = typeDefine.resetter(fieldConfig, currentElement);
+						typeDefine.resetter(fieldConfig, currentElement);
 					}
 				}
 			}
@@ -632,7 +635,7 @@
 			}
 			
 			if ( window.Ln ){
-				templet = Ln.g( templet, config );
+				templet = window.Ln.g( templet, config );
 			}
 			var result = templet;
 			var dataBeginPos = 0;
@@ -669,7 +672,7 @@
 				self.addRule(config);
 				if(!config.type || config.type !== 'accountNo') {
 				    var checkFun = function() {
-                        result = self.checkRule(config);
+                        var result = self.checkRule(config);
                         if ( !result.passed ) {
                             if(self.options.showErrorInWindow)
                                 self.addErrors(result);
@@ -732,7 +735,7 @@
 			}
 
 			return {
-				passed: errors.length == 0,
+				passed: errors.length === 0,
 				requestData: requestData,
 				signData: signData
 			};
@@ -800,12 +803,11 @@
 			
 			var key = rule.key;
 			var dataAccesser = $.isFunction(rule.dataAccesser) ? rule.dataAccesser : this.options.dataAccesser;
-			var batch = rule.batch;
 			var validators = rule.validator;
 			var ignoreCommonValidators = rule.ignoreCommonValidators;
 			var enabled = rule.enabled;
 			
-			if (enabled == false) {
+			if (enabled === false) {
 				return;
 			}
 			
@@ -815,14 +817,15 @@
 			var data = dataAccesser(rule);
 			
 			var commonValidators = this.options.commonValidators;
+            var result;
 			if (commonValidators && !ignoreCommonValidators) {
 				var commonSize = commonValidators.length;
 				for (var i=0; i<commonSize; i++) {
 					var commonValidator = commonValidators[i];
 					
 					if ($.isFunction(commonValidator)) {
-						var result = commonValidator(data, rule, this.$element);
-						if (result === undefined || result == null || result == false) {
+						result = commonValidator(data, rule, this.$element);
+						if (result === undefined || result == null || result === false) {
 							return {
 								passed: true,
 								key : key,
@@ -831,7 +834,7 @@
 								rule : rule
 							};
 						}
-						if (result != true) {
+						if (result !== true) {
 							return {
 								passed: false,
 								key : key,
@@ -848,12 +851,12 @@
 				validators = [validators];
 			}
 			var size = validators.length
-			for (var i=0; i<size; i++) {
-				var validator = validators[i];
+			for (var j=0; j<size; j++) {
+				var validator = validators[j];
 				
 				if ($.isFunction(validator)) {
-					var result = validator(data, rule);
-					if (result === undefined || result == null || result == false) {
+					result = validator(data, rule);
+					if (result === undefined || result == null || result === false) {
 						return {
 							passed: true,
 							key : key,
@@ -862,11 +865,11 @@
 							rule : rule
 						};
 					}
-					if (result != true) {
+					if (result !== true) {
 						return {
 							passed: false,
 							key : key,
-							error : result,
+							error : result ,
 							data : data,
 							rule : rule
 						};
@@ -911,7 +914,6 @@
 		    $.lily.validator._dataTypeValidator ,
 		    $.lily.validator._regexpValidator ,
 		    $.lily.validator._equalToValidator ,
-		    $.lily.validator._checkerValidator ,
 		    $.lily.validator._relatedValidator
 		]
 	}

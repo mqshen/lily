@@ -1,6 +1,6 @@
 !function(){
 
-    "use strict"
+    "use strict";
 
     var Form = function(element, options) {
         this.$element = $(element)
@@ -30,7 +30,6 @@
 
 		    this.oldText = this.$submitButton.text()
 		    this.$submitButton.attr("disabled",true).text(this.$submitButton.attr("data-disable-with"))
-            var $this = $(this) 
             var checkResult = this.$element.data('validator').check();
             if(!checkResult.passed) {
                 this.$submitButton.attr("disabled", false).text(this.oldText);

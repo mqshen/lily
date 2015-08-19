@@ -6,6 +6,8 @@
      *
      * http://github.com/jaz303/jquery-grab-bag/tree/master/javascripts/jquery.autogrow-textarea.js
      */
+    "use strict";
+
     $.fn.autogrow = function(options)
     {
         return this.filter('textarea').each(function()
@@ -13,7 +15,7 @@
             var self         = this;
             var $self        = $(self);
             var minHeight    = $self.height();
-            var noFlickerPad = $self.hasClass('autogrow-short') ? 0 : parseInt($self.css('lineHeight')) || 0;
+            var noFlickerPad = $self.hasClass('autogrow-short') ? 0 : parseInt($self.css('lineHeight'), 10) || 0;
             var settings = $.extend({
                 preGrowCallback: null,
                 postGrowCallback: null
