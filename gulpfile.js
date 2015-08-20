@@ -20,6 +20,7 @@ gulp.task('concat', function(){
       './src/lily.form.js',
       './src/lily.format.js',
       './src/lily.modal.js',
+      './src/lily.menu.js',
       './src/lily.page.js',
       './src/lily.validator.js'])
         .pipe(concat('lily-all.js'))
