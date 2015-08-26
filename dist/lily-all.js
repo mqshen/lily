@@ -462,12 +462,13 @@ $.extend( $.lily, {
         });
     }
     
+    $.fn.collapse             = Plugin
+    $.fn.collapse.Constructor = Collapse 
+
     $.fn.collapse.defaults = {
         loadingText: 'loading...'
     }
     
-    $.fn.collapse             = Plugin
-    $.fn.collapse.Constructor = Collapse 
 
     $(document).on('click.collapse.data-api', '[data-toggle^=collapse]', function (e) {
         var href;
@@ -1742,6 +1743,113 @@ $.extend( $.lily, {
   })
 
 }(jQuery);
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Menu = function (element, options) {
+    this.element = element
+    this.options = options
+  }
+
+  Menu.VERSION  = '0.0.1'
+
+  Menu.TRANSITION_DURATION = 350
+
+  Menu.DEFAULTS = {
+    toggle: false 
+  }
+
+
+  Menu.prototype.show = function () {
+    this.hide()
+    var self = this
+    this.fire("menu:activate", function() { 
+        $(document).on("keydown.menu", self.show())
+        $(document).on("click.menu", self.hide())
+        this.performTransition(function() { 
+            $('body').addClass("menu-active")
+            self.addClass("active")
+            self.find(".js-menu-content[aria-hidden]").attr("aria-hidden", "false")
+        })
+        this.fire("menu:activated", { async: true})
+    })
+  }
+
+  Menu.prototype.hide = function () {
+    this.fire("menu:deactivate", function() { 
+        $(document).off(".menu")
+        var self = this 
+        this.performTransition(function() {
+            $('body').removeClass("menu-active")
+            self.removeClass("active")
+            self.find(".js-menu-content[aria-hidden]").attr("aria-hidden", "true")
+        })
+        this.fire("menu:deactivated", { async: true }) 
+    })
+  }
+
+  Menu.prototype.toggle = function () {
+  }
+
+  // Menu PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('lily.menu')
+      var options = $.extend({}, Menu.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('lily.menu', (data = new Menu(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.menu
+
+  $.fn.menu             = Plugin
+  $.fn.menu.Constructor = Menu
+
+
+  // Menu NO CONFLICT
+  // ====================
+
+  $.fn.menu.noConflict = function () {
+    $.fn.menu = old
+    return this
+  }
+
+
+  // Menu DATA-API
+  // =================
+  $(document).on("click", ".js-menu-container", function(e) {
+    //var target = $(e.target).closest(".js-menu-target");
+    e.preventDefault()
+    //var menu = $(this).data('lily.menu')
+    if($.lily.activeMenu === this) {
+        $(this).menu('hide')
+    } else {
+        $(this).menu('show')
+    }
+  })
+
+  $(document).on("click", ".js-menu-container .js-menu-close", function(e) {
+    var target = $(e.target).closest(".js-menu-container");
+    e.preventDefault()
+    //var menu = $(this).data('lily.menu')
+    if($.lily.activeMenu === this) {
+        target.menu('hide')
+    } else {
+        target.menu('show')
+    }
+  })
+
+}(jQuery);
+
 !function(){
 
     "use strict";
@@ -1837,6 +1945,101 @@ $.extend( $.lily, {
     }
 
     $.fn.page.Constructor = Page
+
+}(window.jQuery);
+
+!function($) {
+
+	"use strict";
+
+	var Timeago = function(element, options) {
+        this.$element = $(element)
+		this.options = $.extend({}, $.fn.timeago.defaults, options)
+        this.init()
+    }
+
+	Timeago.prototype = {
+		constructor: Timeago,
+
+		localization: { // Default regional settings
+            suffixAgo: "之前",
+            suffixFromNow: "从现在开始",
+            seconds: "刚刚",
+            minute: "一分钟前",
+            minutes: "%d分钟前",
+            hour: "一小时前",
+            hours: "%d 小时前",
+            day: "一天前",
+            days: "%d天前",
+            month: "一个月前",
+            months: "%d月前",
+            year: "一年前",
+            years: "%d年前"
+        },
+
+        init: function() {
+            var thisTime = this.$element.attr("data-time")
+            if(!thisTime)
+                return
+            this.time = $.lily.format.parseDate(thisTime, "yyyy-mm-dd hh:mi:ss")
+            this.update()
+            function refresh() {
+                $('time.timeago').timeago()
+            }
+            var refresh_el = $.proxy(refresh, this);
+
+            if(!$.lily.timeagoRefresh) {
+                $.lily.timeagoRefresh = true
+                setInterval(refresh_el, this.options.refreshMillis);
+            }
+        },
+        update: function() {
+            var interval = new Date().getTime() - this.time
+            var seconds = Math.abs(interval) / 1000
+            var minutes = seconds / 60
+            var hours = minutes / 60
+            var days = hours / 24
+            var years = days / 365
+
+            function substitute(string, value) {
+                return string.replace(/%d/i, value)
+            }
+            var $l = this.localization
+
+            var words = seconds < 45 && substitute($l.seconds, Math.round(seconds)) ||
+                seconds < 90 && substitute($l.minute, 1) ||
+                minutes < 45 && substitute($l.minutes, Math.round(minutes)) ||
+                minutes < 90 && substitute($l.hour, 1) ||
+                hours < 24 && substitute($l.hours, Math.round(hours)) ||
+                hours < 42 && substitute($l.day, 1) ||
+                days < 30 && substitute($l.days, Math.round(days)) ||
+                days < 45 && substitute($l.month, 1) ||
+                days < 365 && substitute($l.months, Math.round(days / 30)) ||
+                years < 1.5 && substitute($l.year, 1) ||
+                substitute($l.years, Math.round(years))
+
+            this.$element.text(words)
+        }
+        
+    }
+
+	$.fn.timeago = function(option) {
+		return this
+				.each(function() {
+					var $this = $(this), data = $this.data('timeago'), options = typeof option == 'object' && option
+					if (!data)
+						$this.data('timeago', (data = new Timeago(this, options)))
+                    else
+                        data.update()
+				})
+	}
+
+
+	$.fn.timeago.defaults = {
+        refreshMillis: 60000
+	}
+
+	$.fn.timeago.Constructor = Timeago 
 
 }(window.jQuery);
 

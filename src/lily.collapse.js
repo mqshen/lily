@@ -145,12 +145,13 @@
         });
     }
     
+    $.fn.collapse             = Plugin
+    $.fn.collapse.Constructor = Collapse 
+
     $.fn.collapse.defaults = {
         loadingText: 'loading...'
     }
     
-    $.fn.collapse             = Plugin
-    $.fn.collapse.Constructor = Collapse 
 
     $(document).on('click.collapse.data-api', '[data-toggle^=collapse]', function (e) {
         var href;

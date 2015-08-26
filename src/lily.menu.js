@@ -5,6 +5,8 @@
   // ================================
 
   var Menu = function (element, options) {
+    this.element = element
+    this.options = options
   }
 
   Menu.VERSION  = '0.0.1'
@@ -15,14 +17,15 @@
     toggle: false 
   }
 
+
   Menu.prototype.show = function () {
     this.hide()
+    var self = this
     this.fire("menu:activate", function() { 
-        $(document).on("keydown.menu", i)
-        $(document).on("click.menu", r)
-        var self = this
+        $(document).on("keydown.menu", self.show())
+        $(document).on("click.menu", self.hide())
         this.performTransition(function() { 
-            $(body).addClass("menu-active")
+            $('body').addClass("menu-active")
             self.addClass("active")
             self.find(".js-menu-content[aria-hidden]").attr("aria-hidden", "false")
         })
@@ -33,9 +36,9 @@
   Menu.prototype.hide = function () {
     this.fire("menu:deactivate", function() { 
         $(document).off(".menu")
-        var sefl = this 
+        var self = this 
         this.performTransition(function() {
-            $(body).removeClass("menu-active")
+            $('body').removeClass("menu-active")
             self.removeClass("active")
             self.find(".js-menu-content[aria-hidden]").attr("aria-hidden", "true")
         })
@@ -56,7 +59,7 @@
       var options = $.extend({}, Menu.DEFAULTS, $this.data(), typeof option == 'object' && option)
 
       if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
-      if (!data) $this.data('lily.menu', (data = new Collapse(this, options)))
+      if (!data) $this.data('lily.menu', (data = new Menu(this, options)))
       if (typeof option == 'string') data[option]()
     })
   }
@@ -79,9 +82,9 @@
   // Menu DATA-API
   // =================
   $(document).on("click", ".js-menu-container", function(e) {
-    var target = $(e.target).closest(".js-menu-target");
+    //var target = $(e.target).closest(".js-menu-target");
     e.preventDefault()
-    var menu = $(this).data('lily.menu')
+    //var menu = $(this).data('lily.menu')
     if($.lily.activeMenu === this) {
         $(this).menu('hide')
     } else {
@@ -92,11 +95,12 @@
   $(document).on("click", ".js-menu-container .js-menu-close", function(e) {
     var target = $(e.target).closest(".js-menu-container");
     e.preventDefault()
-    var menu = $(this).data('lily.menu')
+    //var menu = $(this).data('lily.menu')
     if($.lily.activeMenu === this) {
         target.menu('hide')
     } else {
         target.menu('show')
     }
-  }
+  })
+
 }(jQuery);
