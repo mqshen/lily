@@ -1892,7 +1892,7 @@ $.extend( $.lily, {
             this.loading = true;
             var self = this;
             function processResponse(responseData) {
-                self.$appendTo.append($(responseData.contnet));
+                self.$appendTo.append($(responseData.content));
                 self.page += 1;
                 if(self.options.type === 'page') {
                     self.totalElement = responseData["page.total"];
