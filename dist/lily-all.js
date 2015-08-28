@@ -102,14 +102,14 @@ $.extend( $.lily, {
             }
 		}
 
-		function doResponse(data) {
+        option.success = function(data) {
 
 			if(data.returnCode != '0' && data.returnCode != '000000') {
 			    if(data.returnCode === 302 ) {
 			        window.location.href = data.redirect;
 			    }
 			    else {
-					alert(data.errorMsg);
+			    	$.lily.showTips(data.errorMsg);
 					if(errorCallback) {
 						errorCallback();
 					}
@@ -118,17 +118,17 @@ $.extend( $.lily, {
 			else {
 				var currentTime = (new Date()).getTime();
 				var timeInterval = currentTime - startTime ;
-				if(timeInterval < $.lily.minInterval) {
-					setTimeout(function() {options.processResponse(data) }, $.lily.minInterval - timeInterval);
-				}
-				else
-					options.processResponse(data)
+                if(options.processResponse) {
+                    if(timeInterval < $.lily.minInterval) {
+                        setTimeout(function() {options.processResponse(data) }, $.lily.minInterval - timeInterval);
+                    }
+                    else {
+                        options.processResponse(data)
+                    }
+                }
 			}
 		}
-	    if(options.processResponse) {	
-    		$.extend(options, {success: doResponse})
-        }
-		
+				
 		return $.ajax(option);
 	},
 	
@@ -516,10 +516,15 @@ $.extend( $.lily, {
             }
 
 		    this.oldText = this.$submitButton.text()
-		    this.$submitButton.attr("disabled",true).text(this.$submitButton.attr("data-disable-with"))
+            var disableText = this.$submitButton.attr("data-disable-with")
+		    this.$submitButton.attr("disabled",true)
+            if(disableText) 
+                this.$submitButton.text(disableText)
             var checkResult = this.$element.data('validator').check();
             if(!checkResult.passed) {
-                this.$submitButton.attr("disabled", false).text(this.oldText);
+                this.$submitButton.attr("disabled", false)
+                if(disableText)
+                    this.$submitButton.text(this.oldText)
                 return;
             }
             
@@ -527,17 +532,15 @@ $.extend( $.lily, {
 
             var self = this
             function processResponse(responseData) {
-                if(self.$element.data("doResponse")) {
-                    self.$element.data("doResponse")(responseData, self.$element)
-                    self.resetForm()
-                }
-                else {
-                    document.location.href = responseData.successUrl
-                }
+                var e  = $.Event('lily.form:submit', { responseData: responseData})
+                self.$element.trigger(e)
+                self.resetForm()
             }
 
             function resetButton() {
-                self.$submitButton.attr("disabled", false).text(self.oldText)
+                self.$submitButton.attr("disabled", false)
+		        if(disableText)
+                    self.$submitButton.text(self.oldText)
             }
 
             var pjaxContainer = this.$element.attr("data-pjax");
@@ -560,7 +563,10 @@ $.extend( $.lily, {
         },
 
         resetForm: function() {
-		    this.$submitButton.attr("disabled", false).text(this.oldText)
+            var disableText = this.$submitButton.attr("data-disable-with")
+		    this.$submitButton.attr("disabled", false)
+            if(disableText) 
+		        this.$submitButton.text(this.oldText)
             if(this.$element.attr("data-save"))
                 return
             this.$element[0].reset()
@@ -1904,7 +1910,7 @@ $.extend( $.lily, {
                 }
                 if(self.page * self.options.size > self.totalElement || !self.totalElement) {
                     self.hasMore = false;
-                    self.$appendTo.parent().append('<div class="no-more "><span>暂无更多数据</span></div>');
+                    self.$appendTo.append('<div class="no-more "><span>暂无更多数据</span></div>');
                 }
                 $(".loading").hide();
                 self.loading = false;
@@ -1918,7 +1924,7 @@ $.extend( $.lily, {
             $.lily.ajax({url: this.options.url,
                 data: requestData,
                 dataType: 'json',
-                type: 'POST',
+                type: this.options.method,
                 processResponse: processResponse
             })
         }
@@ -1941,6 +1947,7 @@ $.extend( $.lily, {
     $.fn.page.defaults = {
         loadingText: 'loading...',
         type: 'page',
+        method: 'POST',
         size: 10
     }
 

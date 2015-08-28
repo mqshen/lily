@@ -29,10 +29,15 @@
             }
 
 		    this.oldText = this.$submitButton.text()
-		    this.$submitButton.attr("disabled",true).text(this.$submitButton.attr("data-disable-with"))
+            var disableText = this.$submitButton.attr("data-disable-with")
+		    this.$submitButton.attr("disabled",true)
+            if(disableText) 
+                this.$submitButton.text(disableText)
             var checkResult = this.$element.data('validator').check();
             if(!checkResult.passed) {
-                this.$submitButton.attr("disabled", false).text(this.oldText);
+                this.$submitButton.attr("disabled", false)
+                if(disableText)
+                    this.$submitButton.text(this.oldText)
                 return;
             }
             
@@ -40,17 +45,15 @@
 
             var self = this
             function processResponse(responseData) {
-                if(self.$element.data("doResponse")) {
-                    self.$element.data("doResponse")(responseData, self.$element)
-                    self.resetForm()
-                }
-                else {
-                    document.location.href = responseData.successUrl
-                }
+                var e  = $.Event('lily.form:submit', { responseData: responseData})
+                self.$element.trigger(e)
+                self.resetForm()
             }
 
             function resetButton() {
-                self.$submitButton.attr("disabled", false).text(self.oldText)
+                self.$submitButton.attr("disabled", false)
+		        if(disableText)
+                    self.$submitButton.text(self.oldText)
             }
 
             var pjaxContainer = this.$element.attr("data-pjax");
@@ -73,7 +76,10 @@
         },
 
         resetForm: function() {
-		    this.$submitButton.attr("disabled", false).text(this.oldText)
+            var disableText = this.$submitButton.attr("data-disable-with")
+		    this.$submitButton.attr("disabled", false)
+            if(disableText) 
+		        this.$submitButton.text(this.oldText)
             if(this.$element.attr("data-save"))
                 return
             this.$element[0].reset()

@@ -52,7 +52,7 @@
                 }
                 if(self.page * self.options.size > self.totalElement || !self.totalElement) {
                     self.hasMore = false;
-                    self.$appendTo.parent().append('<div class="no-more "><span>暂无更多数据</span></div>');
+                    self.$appendTo.append('<div class="no-more "><span>暂无更多数据</span></div>');
                 }
                 $(".loading").hide();
                 self.loading = false;
@@ -66,7 +66,7 @@
             $.lily.ajax({url: this.options.url,
                 data: requestData,
                 dataType: 'json',
-                type: 'POST',
+                type: this.options.method,
                 processResponse: processResponse
             })
         }
@@ -89,6 +89,7 @@
     $.fn.page.defaults = {
         loadingText: 'loading...',
         type: 'page',
+        method: 'POST',
         size: 10
     }
 

@@ -102,14 +102,14 @@ $.extend( $.lily, {
             }
 		}
 
-		function doResponse(data) {
+        option.success = function(data) {
 
 			if(data.returnCode != '0' && data.returnCode != '000000') {
 			    if(data.returnCode === 302 ) {
 			        window.location.href = data.redirect;
 			    }
 			    else {
-					alert(data.errorMsg);
+			    	$.lily.showTips(data.errorMsg);
 					if(errorCallback) {
 						errorCallback();
 					}
@@ -118,17 +118,17 @@ $.extend( $.lily, {
 			else {
 				var currentTime = (new Date()).getTime();
 				var timeInterval = currentTime - startTime ;
-				if(timeInterval < $.lily.minInterval) {
-					setTimeout(function() {options.processResponse(data) }, $.lily.minInterval - timeInterval);
-				}
-				else
-					options.processResponse(data)
+                if(options.processResponse) {
+                    if(timeInterval < $.lily.minInterval) {
+                        setTimeout(function() {options.processResponse(data) }, $.lily.minInterval - timeInterval);
+                    }
+                    else {
+                        options.processResponse(data)
+                    }
+                }
 			}
 		}
-	    if(options.processResponse) {	
-    		$.extend(options, {success: doResponse})
-        }
-		
+				
 		return $.ajax(option);
 	},
 	
