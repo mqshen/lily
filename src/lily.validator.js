@@ -113,8 +113,10 @@
 	            } )
 	        },
 	        'checkbox':{
-	            output : ( function( fieldConfig ){
-	                return $('#' + fieldConfig.id).checked;
+                output : ( function( fieldConfig ){
+	                if(fieldConfig.$element.prop('checked'))
+	                    return fieldConfig.$element.val();
+	                return '';
 	            } )
 	        },
 	        'combox':{
@@ -450,6 +452,13 @@
 					return $.lily.validator._getErrorMessage( fieldConfig, $.lily.validator.LANGUAGE_SELECT, true );
 				}
 				return true;
+			} else if(fieldConfig.type == 'checkbox') {
+			    var checkboxList = $("input:checked", fieldConfig.$element.closest('div'));
+                if ( checkboxList.length === 0 ){
+                    this._errorCount++;
+                    return $.lily.validator._getErrorMessage( fieldConfig, $.lily.validator.LANGUAGE_SELECT, true );
+                }
+                return true;
 			}
 			// 必输项校验
 			if (fieldValue.blank() || fieldValue==fieldConfig.defaultValue) {
