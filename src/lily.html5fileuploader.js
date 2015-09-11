@@ -32,54 +32,59 @@
             this.$progress.css("width", pc + '%')
         },
 
-        fileUploadCallback: function (data) {
+        fileUploadCallback: function (data, $fileObj) {
 			if(data.returnCode != '0' && data.returnCode != '000000') {
                 $.lily.showTips(data.errorMsg);
-                this.$fileObj.remove()
+                $fileObj.remove()
                 return;
 			}
             if(this.options.thumbnail) {
-                $('[type=hidden]', this.$element).val(data.content)
+                $('[type=hidden]', $fileObj).val(data.content)
                 this.$progress.css("width", '100%')
-                this.$fileObj.removeClass("uploading")
+                $fileObj.removeClass("uploading")
             }
         },
 
         fileupload: function() {
             this.file = this.$target.get(0).files[0]
             this.isImage = this.file.type.indexOf("image") > -1
+            var $fileObj;
             if(this.options.thumbnail) {
                 var $attachmentsContainer = this.$element
 
+                var fieldName = this.options.name;
+                if(this.options.multiple) {
+                    fieldName += '[' + $attachmentsContainer.children().length + ']'
+                }
                 var fileObj = '<li class="image uploading selected" data-toggle="select" name="attachment">'
-                    + '<input type="hidden" name="' + this.options.name + '">'
-                    + '<span data-toggle="remove" ></span>'
+                    + '<input type="hidden" name="' + fieldName + '" data-validate=\'{"name": "图片"}\'>'
+                    + '<span class="js-remove" data-toggle="remove" ></span>'
 
                 if(!this.isImage) {
                     fileObj += '<div class="icon"><img src="/static/images/filetype/file.png" class="file_icon" width="32" height="32"></div>'
                 }
 
-                this.$fileObj = $(fileObj)
+                $fileObj = $(fileObj)
 
                 var $progressBar = $('<div class="progress"></div>')
                 this.$progress = $('<div>')
                 $progressBar.append(this.$progress)
 
-                this.$fileObj.append($progressBar)
+                $fileObj.append($progressBar)
 
                 this.$image = $('<img class="thumbnail">')
                 if(this.isImage)
-                    this.$fileObj.prepend(this.$image)
-                $attachmentsContainer.prepend(this.$fileObj)
+                    $fileObj.prepend(this.$image)
+                $attachmentsContainer.prepend($fileObj)
             }
             else {
                 this.$image = $('img' , this.$element)
             }
 
-            this.uploadFile()
+            this.uploadFile($fileObj)
         },
 
-        uploadFile: function() {
+        uploadFile: function($fileObj) {
             var self = this
             var xhr = new XMLHttpRequest();
 	    	if (xhr.upload ) {
@@ -113,7 +118,7 @@
                             var responseText = xhr.responseText
                             if(dataType === 'json')
                                 responseText = $.parseJSON(responseText)
-                            self.fileUploadCallback(responseText)
+                            self.fileUploadCallback(responseText, $fileObj)
                         }
 	    			}
 	    		};
@@ -142,5 +147,12 @@
     }
 
     $.fn.fileuploader.Constructor = FileUploader
+
+
+    $(document).on('click.button.data-api', '[data-toggle^=remove]', function (e) {
+        var $btn = $(e.target)
+        if (!$btn.hasClass('js-remove')) $btn = $btn.closest('.js-remove')
+        $btn.parent().remove()
+    })
 }( jQuery );
 

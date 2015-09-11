@@ -311,6 +311,11 @@ $.extend( $.lily, {
 
     hex: function(x) {
         return isNaN(x) ? "00" : $.lily.hexDigits[(x - x % 16) / 16] + $.lily.hexDigits[x % 16];
+    },
+    showTips: function(str) {
+        var obj = $('<div class="popbox">' + str + '</div>')
+        $('body').append(obj)
+     	setTimeout(function(){obj.remove()}, 2000)
     }
 });
 })( jQuery ); 

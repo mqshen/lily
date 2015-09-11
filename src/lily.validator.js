@@ -113,7 +113,7 @@
 	            } )
 	        },
 	        'checkbox':{
-                output : ( function( fieldConfig ){
+	            output : ( function( fieldConfig ){
 	                if(fieldConfig.$element.prop('checked'))
 	                    return fieldConfig.$element.val();
 	                return '';
@@ -445,7 +445,7 @@
 		_requiredValidator : function(fieldValue, fieldConfig) {
 
 			//radio一定检查是否选中
-			if (fieldConfig.type == 'radio') {
+			if (fieldConfig.type == 'radio' )  {
 				var radioList = $("input:checked", fieldConfig.$element);
 				if ( radioList.length === 0 ){
 					this._errorCount++;
@@ -578,7 +578,7 @@
 			if ( fieldConfig.equalTo || fieldConfig.notEqualTo ){
 				var targetId = ( fieldConfig.equalTo ) ? fieldConfig.equalTo : fieldConfig.notEqualTo;
 
-				var targetValue = $(targetId);
+				var targetValue = $(targetId).val();
 				if ( fieldConfig.equalTo && fieldValue != targetValue  ){
 					return $.lily.validator._getErrorMessage( fieldConfig, $.lily.validator.LANGUAGE_NOT_EQUAL );
 				}
@@ -669,7 +669,7 @@
 		this.options = options;
 		this._rules = [];
 		var self = this;
-		$('input,textarea,[contenteditable]' , this.$element).each(function () {
+		$('input,textarea,[data-validate]' , this.$element).each(function () {
 			var $this = $(this);
 			var dataValidate = $this.attr('data-validate');
 			if(dataValidate) {
@@ -781,7 +781,7 @@
 			else {
 				errorMessage += errors.error ;
 			}
-			alert(errorMessage);
+            $.lily.showTips(errorMessage);
 			/*
 			var htmlStr = "<ul>";
 
@@ -833,7 +833,7 @@
 					var commonValidator = commonValidators[i];
 					
 					if ($.isFunction(commonValidator)) {
-						result = commonValidator(data, rule, this.$element);
+					    result = commonValidator.call(this, data, rule, this.$element);
 						if (result === undefined || result == null || result === false) {
 							return {
 								passed: true,
@@ -930,5 +930,4 @@
 	$.fn.validator.Constructor = Validator;
 	
 })( window.jQuery );
-	
-	
+
