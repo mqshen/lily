@@ -311,6 +311,11 @@ $.extend( $.lily, {
 
     hex: function(x) {
         return isNaN(x) ? "00" : $.lily.hexDigits[(x - x % 16) / 16] + $.lily.hexDigits[x % 16];
+    },
+    showTips: function(str) {
+        var obj = $('<div class="popbox">' + str + '</div>')
+        $('body').append(obj)
+     	setTimeout(function(){obj.remove()}, 2000)
     }
 });
 })( jQuery ); 
@@ -2084,54 +2089,59 @@ $.extend( $.lily, {
             this.$progress.css("width", pc + '%')
         },
 
-        fileUploadCallback: function (data) {
+        fileUploadCallback: function (data, $fileObj) {
 			if(data.returnCode != '0' && data.returnCode != '000000') {
                 $.lily.showTips(data.errorMsg);
-                this.$fileObj.remove()
+                $fileObj.remove()
                 return;
 			}
             if(this.options.thumbnail) {
-                $('[type=hidden]', this.$element).val(data.content)
+                $('[type=hidden]', $fileObj).val(data.content)
                 this.$progress.css("width", '100%')
-                this.$fileObj.removeClass("uploading")
+                $fileObj.removeClass("uploading")
             }
         },
 
         fileupload: function() {
             this.file = this.$target.get(0).files[0]
             this.isImage = this.file.type.indexOf("image") > -1
+            var $fileObj;
             if(this.options.thumbnail) {
                 var $attachmentsContainer = this.$element
 
+                var fieldName = this.options.name;
+                if(this.options.multiple) {
+                    fieldName += '[' + $attachmentsContainer.children().length + ']'
+                }
                 var fileObj = '<li class="image uploading selected" data-toggle="select" name="attachment">'
-                    + '<input type="hidden" name="' + this.options.name + '">'
-                    + '<span data-toggle="remove" ></span>'
+                    + '<input type="hidden" name="' + fieldName + '" data-validate=\'{"name": "图片"}\'>'
+                    + '<span class="js-remove" data-toggle="remove" ></span>'
 
                 if(!this.isImage) {
                     fileObj += '<div class="icon"><img src="/static/images/filetype/file.png" class="file_icon" width="32" height="32"></div>'
                 }
 
-                this.$fileObj = $(fileObj)
+                $fileObj = $(fileObj)
 
                 var $progressBar = $('<div class="progress"></div>')
                 this.$progress = $('<div>')
                 $progressBar.append(this.$progress)
 
-                this.$fileObj.append($progressBar)
+                $fileObj.append($progressBar)
 
                 this.$image = $('<img class="thumbnail">')
                 if(this.isImage)
-                    this.$fileObj.prepend(this.$image)
-                $attachmentsContainer.prepend(this.$fileObj)
+                    $fileObj.prepend(this.$image)
+                $attachmentsContainer.prepend($fileObj)
             }
             else {
                 this.$image = $('img' , this.$element)
             }
 
-            this.uploadFile()
+            this.uploadFile($fileObj)
         },
 
-        uploadFile: function() {
+        uploadFile: function($fileObj) {
             var self = this
             var xhr = new XMLHttpRequest();
 	    	if (xhr.upload ) {
@@ -2165,7 +2175,7 @@ $.extend( $.lily, {
                             var responseText = xhr.responseText
                             if(dataType === 'json')
                                 responseText = $.parseJSON(responseText)
-                            self.fileUploadCallback(responseText)
+                            self.fileUploadCallback(responseText, $fileObj)
                         }
 	    			}
 	    		};
@@ -2194,6 +2204,13 @@ $.extend( $.lily, {
     }
 
     $.fn.fileuploader.Constructor = FileUploader
+
+
+    $(document).on('click.button.data-api', '[data-toggle^=remove]', function (e) {
+        var $btn = $(e.target)
+        if (!$btn.hasClass('js-remove')) $btn = $btn.closest('.js-remove')
+        $btn.parent().remove()
+    })
 }( jQuery );
 
 
@@ -2453,7 +2470,7 @@ $.extend( $.lily, {
 	            } )
 	        },
 	        'checkbox':{
-                output : ( function( fieldConfig ){
+	            output : ( function( fieldConfig ){
 	                if(fieldConfig.$element.prop('checked'))
 	                    return fieldConfig.$element.val();
 	                return '';
@@ -2785,7 +2802,7 @@ $.extend( $.lily, {
 		_requiredValidator : function(fieldValue, fieldConfig) {
 
 			//radio一定检查是否选中
-			if (fieldConfig.type == 'radio') {
+			if (fieldConfig.type == 'radio' )  {
 				var radioList = $("input:checked", fieldConfig.$element);
 				if ( radioList.length === 0 ){
 					this._errorCount++;
@@ -2918,7 +2935,7 @@ $.extend( $.lily, {
 			if ( fieldConfig.equalTo || fieldConfig.notEqualTo ){
 				var targetId = ( fieldConfig.equalTo ) ? fieldConfig.equalTo : fieldConfig.notEqualTo;
 
-				var targetValue = $(targetId);
+				var targetValue = $(targetId).val();
 				if ( fieldConfig.equalTo && fieldValue != targetValue  ){
 					return $.lily.validator._getErrorMessage( fieldConfig, $.lily.validator.LANGUAGE_NOT_EQUAL );
 				}
@@ -3009,7 +3026,7 @@ $.extend( $.lily, {
 		this.options = options;
 		this._rules = [];
 		var self = this;
-		$('input,textarea,[contenteditable]' , this.$element).each(function () {
+		$('input,textarea,[data-validate]' , this.$element).each(function () {
 			var $this = $(this);
 			var dataValidate = $this.attr('data-validate');
 			if(dataValidate) {
@@ -3121,7 +3138,7 @@ $.extend( $.lily, {
 			else {
 				errorMessage += errors.error ;
 			}
-			alert(errorMessage);
+            $.lily.showTips(errorMessage);
 			/*
 			var htmlStr = "<ul>";
 
@@ -3173,7 +3190,7 @@ $.extend( $.lily, {
 					var commonValidator = commonValidators[i];
 					
 					if ($.isFunction(commonValidator)) {
-						result = commonValidator(data, rule, this.$element);
+					    result = commonValidator.call(this, data, rule, this.$element);
 						if (result === undefined || result == null || result === false) {
 							return {
 								passed: true,
@@ -3270,5 +3287,4 @@ $.extend( $.lily, {
 	$.fn.validator.Constructor = Validator;
 	
 })( window.jQuery );
-	
-	
+
