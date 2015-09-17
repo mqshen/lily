@@ -25,7 +25,9 @@ gulp.task('concat', function(){
       './src/lily.timeago.js',
       './src/lily.html5fileuploader.js',
       './src/lily.button.js',
-      './src/lily.validator.js'])
+      './src/lily.validator.js',
+      './src/lily.editor.js',
+      './src/lily.fileupload.js'])
         .pipe(concat('lily-all.js'))
         .pipe(gulp.dest('./dist/'));
 
