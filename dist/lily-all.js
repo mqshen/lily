@@ -3777,7 +3777,7 @@ $.extend( $.lily, {
                     else {
                         this.pasteHtmlAtCaret(param);
                     }
-                    this.calcHeight()
+                    //this.calcHeight()
                 }
                 else if (cmd === 'unlink') {
                     parent = this.getParentNode();
