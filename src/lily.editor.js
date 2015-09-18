@@ -101,11 +101,14 @@
         },
         buildButton: function(key, s) {
 
-            var button = $('<div class="toolbar-button" title="' + s.title + '" role="button" aria-pressed="false" id="+code" style="-webkit-user-select: none;">'
-                + '<div class="toolbar-button-outer-box" style="-webkit-user-select: none;">'
-                + '<div class="toolbar-button-inner-box" style="-webkit-user-select: none;"><div class="tr-icon tr-'
-                + key + '" style="-webkit-user-select: none;"></div></div></div></div>');
+            //var button = $('<div class="toolbar-button" title="' + s.title + '" role="button" aria-pressed="false" id="+code" style="-webkit-user-select: none;">'
+            //    + '<div class="toolbar-button-outer-box" style="-webkit-user-select: none;">'
+            //    + '<div class="toolbar-button-inner-box" style="-webkit-user-select: none;"><div class="tr-icon tr-'
+            //    + key + '" style="-webkit-user-select: none;"></div></div></div></div>');
             //var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="editor_btn_' + key + '">' + s.title + '</a>');
+            var button = $('<a href="javascript:void(null);" class="toolbar-button tr-icon tr-'
+                            + key + '" title="' + s.title + '" role="button" aria-pressed="false" id="+code" style="-webkit-user-select: none;">'
+                            + '</a>')
 
             if (typeof s.func === 'undefined') {
                 button.click($.proxy(function() {
