@@ -3307,6 +3307,7 @@ $.extend( $.lily, {
             this.window = window;
             this.document = document;
             this.$editor = $('<div class="wysihtml5-sandbox" contenteditable="true" frameborder="0"></div>')
+            this.$summaryContainer = $('<input type="hidden" data-validate=\'{"name": "摘要"}\' name="summary" />')
             if (this.options.css) {
                 this.$editor.contents().find('head').append('<link rel="stylesheet" href="' + this.options.css + '" />');
             }
@@ -3341,6 +3342,7 @@ $.extend( $.lily, {
             this.$box.append(editorContainer)
             editorContainer.append(this.$editor)
             editorContainer.append(this.$element);
+            editorContainer.append(this.$summaryContainer);
             editorContainer.addClass('wysihtml_container')
             html = this.paragraphy(html);
             this.$editor.html(html);
@@ -3695,6 +3697,7 @@ $.extend( $.lily, {
         },
         syncCode: function() {
             this.$element.val(this.$editor.html());
+            this.$summaryContainer.val(this.$editor.text().substring(0, 60))
         },
         // Get elements, html and text
         getCurrentNode: function() {
