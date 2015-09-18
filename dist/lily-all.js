@@ -1887,6 +1887,12 @@ $.extend( $.lily, {
             });
         },
 
+        resetUrl: function(url) {
+            this.options.url = url;
+            this.reset();
+        },
+        
+
         reset: function() {
             this.hasMore = true;
             this.page = 0;
