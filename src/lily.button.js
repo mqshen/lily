@@ -16,6 +16,8 @@
   var Button = function (element, options) {
     this.$element  = $(element)
     this.options   = $.extend({}, Button.DEFAULTS, options)
+    var $parent = this.$element.closest('[data-toggle="buttons"]')
+    this.maxSelector = $parent.attr("data-max-selected")
     this.isLoading = false
   }
 
@@ -60,6 +62,9 @@
         $parent.find('.active').removeClass('active')
         this.$element.addClass('active')
       } else if ($input.prop('type') == 'checkbox') {
+        if(this.maxSelector && $parent.find('.active').length >= this.maxSelector && !this.$element.hasClass('active')) {
+          return;
+        }
         if (($input.prop('checked')) !== this.$element.hasClass('active')) changed = false
         this.$element.toggleClass('active')
       }
@@ -138,3 +143,4 @@
     })
 
 }(jQuery);
+

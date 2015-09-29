@@ -52,7 +52,7 @@
             var id = this.$element.attr('id');
             this.$newElement = this.createView();
             this.$element.after(this.$newElement);
-            this.$menu = this.$newElement.find('> .dropdown-menu');
+            this.$menu = this.$newElement.find('> .dropdown-menu-container');
             this.$button = this.$newElement.find('> button');
             this.$searchbox = this.$newElement.find('input');
 
@@ -90,7 +90,7 @@
                         "<div class='filter-option pull-left'></div>&nbsp;" +
                         "<div class='caret'></div>" +
                     "</button>" +
-                    "<div class='dropdown-menu open'>" +
+                    "<div class='dropdown-menu-container open'>" +
                         header +
                         searchbox +
                         "<ul class='dropdown-menu inner' role='menu'>" +
@@ -266,7 +266,7 @@
         liHeight: function() {
             var selectClone = this.$newElement.clone();
             selectClone.appendTo('body');
-            var $menuClone = selectClone.addClass('open').find('> .dropdown-menu');
+            var $menuClone = selectClone.addClass('open').find('> .dropdown-menu-container');
             var liHeight = $menuClone.find('li > a').outerHeight();
             var headerHeight = this.options.header ? $menuClone.find('.popover-title').outerHeight() : 0;
             var searchHeight = this.options.liveSearch ? $menuClone.find('.bootstrap-select-searchbox').outerHeight() : 0;
@@ -336,7 +336,7 @@
 
                 // Get correct width if element hidden
                 var selectClone = this.$newElement.clone().appendTo('body');
-                var ulWidth = selectClone.find('> .dropdown-menu').css('width');
+                var ulWidth = selectClone.find('> .dropdown-menu-container').css('width');
                 selectClone.remove();
 
                 this.$newElement.css('width', ulWidth);
@@ -462,8 +462,8 @@
                 e.stopPropagation();
             });
 
-            this.$newElement.on('click', function() {
-                that.setSize();
+            this.$button.on('click', function() {
+                that.$menu.addClass("open")
             });
 
             this.$menu.on('click', 'li a', function(e) {
@@ -500,6 +500,7 @@
                     if (prevValue != that.$element.val()) {
                         that.$element.change();
                     }
+                    that.$menu.removeClass("open")
                 }
             });
 
@@ -725,4 +726,5 @@
         .on('keydown', '[data-toggle=dropdown], [role=menu]' , Selectpicker.prototype.keydown);
 
 }(window.jQuery);
+
 

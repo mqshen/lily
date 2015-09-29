@@ -726,7 +726,9 @@
 					continue;
 				var result = this.checkRule(rule);
 				if ( result.passed ) {
-					requestData[rule.id] = result.data;
+                    if(result.data !== undefined && result.data !== null) {
+					    requestData[rule.id] = result.data;
+				    }
 					this.hideError(rule.$element)
 				}
 				else {

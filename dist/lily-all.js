@@ -2238,6 +2238,8 @@ $.extend( $.lily, {
   var Button = function (element, options) {
     this.$element  = $(element)
     this.options   = $.extend({}, Button.DEFAULTS, options)
+    var $parent = this.$element.closest('[data-toggle="buttons"]')
+    this.maxSelector = $parent.attr("data-max-selected")
     this.isLoading = false
   }
 
@@ -2282,6 +2284,9 @@ $.extend( $.lily, {
         $parent.find('.active').removeClass('active')
         this.$element.addClass('active')
       } else if ($input.prop('type') == 'checkbox') {
+        if(this.maxSelector && $parent.find('.active').length >= this.maxSelector && !this.$element.hasClass('active')) {
+          return;
+        }
         if (($input.prop('checked')) !== this.$element.hasClass('active')) changed = false
         this.$element.toggleClass('active')
       }
@@ -2360,6 +2365,7 @@ $.extend( $.lily, {
     })
 
 }(jQuery);
+
 
 /**
  * jQuery validator - v1.0
@@ -3089,7 +3095,9 @@ $.extend( $.lily, {
 					continue;
 				var result = this.checkRule(rule);
 				if ( result.passed ) {
-					requestData[rule.id] = result.data;
+                    if(result.data !== undefined && result.data !== null) {
+					    requestData[rule.id] = result.data;
+				    }
 					this.hideError(rule.$element)
 				}
 				else {
@@ -4530,7 +4538,7 @@ $.extend( $.lily, {
             var id = this.$element.attr('id');
             this.$newElement = this.createView();
             this.$element.after(this.$newElement);
-            this.$menu = this.$newElement.find('> .dropdown-menu');
+            this.$menu = this.$newElement.find('> .dropdown-menu-container');
             this.$button = this.$newElement.find('> button');
             this.$searchbox = this.$newElement.find('input');
 
@@ -4568,7 +4576,7 @@ $.extend( $.lily, {
                         "<div class='filter-option pull-left'></div>&nbsp;" +
                         "<div class='caret'></div>" +
                     "</button>" +
-                    "<div class='dropdown-menu open'>" +
+                    "<div class='dropdown-menu-container open'>" +
                         header +
                         searchbox +
                         "<ul class='dropdown-menu inner' role='menu'>" +
@@ -4744,7 +4752,7 @@ $.extend( $.lily, {
         liHeight: function() {
             var selectClone = this.$newElement.clone();
             selectClone.appendTo('body');
-            var $menuClone = selectClone.addClass('open').find('> .dropdown-menu');
+            var $menuClone = selectClone.addClass('open').find('> .dropdown-menu-container');
             var liHeight = $menuClone.find('li > a').outerHeight();
             var headerHeight = this.options.header ? $menuClone.find('.popover-title').outerHeight() : 0;
             var searchHeight = this.options.liveSearch ? $menuClone.find('.bootstrap-select-searchbox').outerHeight() : 0;
@@ -4814,7 +4822,7 @@ $.extend( $.lily, {
 
                 // Get correct width if element hidden
                 var selectClone = this.$newElement.clone().appendTo('body');
-                var ulWidth = selectClone.find('> .dropdown-menu').css('width');
+                var ulWidth = selectClone.find('> .dropdown-menu-container').css('width');
                 selectClone.remove();
 
                 this.$newElement.css('width', ulWidth);
@@ -4940,8 +4948,8 @@ $.extend( $.lily, {
                 e.stopPropagation();
             });
 
-            this.$newElement.on('click', function() {
-                that.setSize();
+            this.$button.on('click', function() {
+                that.$menu.addClass("open")
             });
 
             this.$menu.on('click', 'li a', function(e) {
@@ -4978,6 +4986,7 @@ $.extend( $.lily, {
                     if (prevValue != that.$element.val()) {
                         that.$element.change();
                     }
+                    that.$menu.removeClass("open")
                 }
             });
 
@@ -5203,6 +5212,7 @@ $.extend( $.lily, {
         .on('keydown', '[data-toggle=dropdown], [role=menu]' , Selectpicker.prototype.keydown);
 
 }(window.jQuery);
+
 
 
 /**
