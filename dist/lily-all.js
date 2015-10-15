@@ -501,41 +501,54 @@ $.extend( $.lily, {
         this.$element.validator()
         var self = this
         this.$element.submit(function(e) {
-            self.submit();
-            e.preventDefault();
-            e.stopPropagation();
+            if(!self.checkData()) {
+                e.preventDefault();
+                e.stopPropagation();
+                return
+            }
         });
     }
 
     Form.prototype = {
         constructor: Form,
 
-        submit: function() {
-
+        checkData: function() {
             var needConfirm = this.$submitButton.attr("data-confirm");
             if(needConfirm) {
                 var r=confirm(needConfirm);
                 if (!r) {
-                    return;
+                    return false;
                 }
             }
 
-		    this.oldText = this.$submitButton.text()
+            this.oldText = this.$submitButton.text()
             var disableText = this.$submitButton.attr("data-disable-with")
-		    this.$submitButton.attr("disabled",true)
-            if(disableText) 
+            this.$submitButton.attr("disabled",true)
+            if(disableText)
                 this.$submitButton.text(disableText)
             var checkResult = this.$element.data('validator').check();
+            if(this.options.customerCheck && !this.options.customerCheck()) {
+                checkResult.passed = false
+            }
             if(!checkResult.passed) {
                 this.$submitButton.attr("disabled", false)
                 if(disableText)
                     this.$submitButton.text(this.oldText)
-                return;
+                return false;
             }
-            
-            var requestData = checkResult.requestData
+
+            return checkResult.requestData
+        },
+
+        submit: function() {
 
             var self = this
+            var requestData = self.checkData()
+            if(!requestData) {
+                return
+            }
+            var disableText = this.$submitButton.attr("data-disable-with")
+
             function processResponse(responseData) {
                 var e  = $.Event('lily.form:submit', { responseData: responseData})
                 self.$element.trigger(e)
@@ -557,13 +570,16 @@ $.extend( $.lily, {
                     data: requestData
                 })
             }
-            else {
+            else if(this.options.ajax) {
                 $.lily.ajax({url: this.$element.attr("action"),
                     data: requestData,
                     dataType: 'json',
                     type: 'POST',
                     processResponse: processResponse
                 }, resetButton)
+
+            } else {
+                this.$element.submit()
             }
         },
 
@@ -594,7 +610,8 @@ $.extend( $.lily, {
     }
     
     $.fn.form.defaults = {
-        loadingText: 'loading...'
+        loadingText: 'loading...',
+        ajax: false
     }
     
     $.fn.form.Constructor = Form 
@@ -607,6 +624,7 @@ $.extend( $.lily, {
         e.stopPropagation();
     })
 }(window.jQuery);
+
 
 /**
  * jQuery format - v1.0
