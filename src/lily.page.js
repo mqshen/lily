@@ -56,8 +56,8 @@
                         self.hasMore = false;
                     }
                 }
-                if(self.option.summary) {
-                    $(self.option.summary).empty().append($(requestData.summary))
+                if(self.options.summary) {
+                    $(self.optiois.summary).empty().append($(responseData.summary))
                 }
                 if(self.page * self.options.size > self.totalElement || !self.totalElement) {
                     self.hasMore = false;
