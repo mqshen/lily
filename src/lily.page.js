@@ -56,6 +56,9 @@
                         self.hasMore = false;
                     }
                 }
+                if(self.option.summary) {
+                    $(self.option.summary).empty().append($(requestData.summary))
+                }
                 if(self.page * self.options.size > self.totalElement || !self.totalElement) {
                     self.hasMore = false;
                     self.$appendTo.append('<div class="no-more "><span>暂无更多数据</span></div>');
@@ -102,3 +105,4 @@
     $.fn.page.Constructor = Page
 
 }(window.jQuery);
+
