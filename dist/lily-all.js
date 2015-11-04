@@ -313,7 +313,7 @@ $.extend( $.lily, {
         return isNaN(x) ? "00" : $.lily.hexDigits[(x - x % 16) / 16] + $.lily.hexDigits[x % 16];
     },
     showTips: function(str) {
-        var obj = $('<div class="popbox">' + str + '</div>')
+        var obj = $('<div class="modal-warn">' + str + '</div>')
         $('body').append(obj)
      	setTimeout(function(){obj.remove()}, 2000)
     }
@@ -500,6 +500,8 @@ $.extend( $.lily, {
         this.options = $.extend({}, $.fn.form.defaults, options)
         this.$element.validator()
         var self = this
+        this.$backdrop           = null
+        this.$body               = $(document.body)
         this.$element.submit(function(e) {
             if(!self.checkData()) {
                 e.preventDefault();
@@ -512,6 +514,15 @@ $.extend( $.lily, {
     Form.prototype = {
         constructor: Form,
 
+        showBackdrop: function() {
+            this.$backdrop = $('<div class="modal-backdrop in" ><div class="loading-container"><div class="loading">加载中···</div></div></div>').appendTo(this.$body)
+        },
+
+        removeBackdrop: function () {
+            this.$backdrop && this.$backdrop.remove()
+            this.$backdrop = null
+        },
+
         checkData: function() {
             var needConfirm = this.$submitButton.attr("data-confirm");
             if(needConfirm) {
@@ -519,6 +530,10 @@ $.extend( $.lily, {
                 if (!r) {
                     return false;
                 }
+            }
+
+            if(this.options.loadingBackdrop) {
+                this.showBackdrop()
             }
 
             this.oldText = this.$submitButton.text()
@@ -557,7 +572,8 @@ $.extend( $.lily, {
 
             function resetButton() {
                 self.$submitButton.attr("disabled", false)
-		        if(disableText)
+                self.removeBackdrop()
+                if(disableText)
                     self.$submitButton.text(self.oldText)
             }
 
@@ -585,9 +601,9 @@ $.extend( $.lily, {
 
         resetForm: function() {
             var disableText = this.$submitButton.attr("data-disable-with")
-		    this.$submitButton.attr("disabled", false)
+            this.$submitButton.attr("disabled", false)
             if(disableText) 
-		        this.$submitButton.text(this.oldText)
+                this.$submitButton.text(this.oldText)
             if(this.$element.attr("data-save"))
                 return
             this.$element[0].reset()
@@ -611,7 +627,8 @@ $.extend( $.lily, {
     
     $.fn.form.defaults = {
         loadingText: 'loading...',
-        ajax: false
+        ajax: false,
+        loadingBackdrop: false
     }
     
     $.fn.form.Constructor = Form 
@@ -624,6 +641,7 @@ $.extend( $.lily, {
         e.stopPropagation();
     })
 }(window.jQuery);
+
 
 
 /**
@@ -1938,7 +1956,7 @@ $.extend( $.lily, {
                     }
                 }
                 if(self.options.summary) {
-                    $(self.optiois.summary).empty().append($(requestData.summary))
+                    $(self.optiois.summary).empty().append($(responseData.summary))
                 }
                 if(self.page * self.options.size > self.totalElement || !self.totalElement) {
                     self.hasMore = false;
