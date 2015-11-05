@@ -1956,7 +1956,7 @@ $.extend( $.lily, {
                     }
                 }
                 if(self.options.summary) {
-                    $(self.optiois.summary).empty().append($(responseData.summary))
+                    $(self.options.summary).empty().append($(responseData.summary))
                 }
                 if(self.page * self.options.size > self.totalElement || !self.totalElement) {
                     self.hasMore = false;
