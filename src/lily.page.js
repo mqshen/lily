@@ -56,7 +56,7 @@
                         self.hasMore = false;
                     }
                 }
-                if(self.options.summary) {
+                if(self.options.summary && responseData.summary && responseData.summary.length > 0) {
                     $(self.options.summary).empty().append($(responseData.summary))
                 }
                 if(self.page * self.options.size > self.totalElement || !self.totalElement) {
