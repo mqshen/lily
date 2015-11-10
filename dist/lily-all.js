@@ -1964,6 +1964,12 @@ $.extend( $.lily, {
                 }
                 $(".loading").hide();
                 self.loading = false;
+                if(self.options.appendRequestData) { 
+                    var name = self.options.appendRequestData 
+                    var temp = {}
+                    temp[name] = responseData[name] 
+                    self.requestData = $.extend(temp, self.requestData) 
+                }
             }
             var requestData ;
             if(self.options.type === 'page') {
