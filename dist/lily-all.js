@@ -1974,9 +1974,9 @@ $.extend( $.lily, {
             }
             var requestData ;
             if(self.options.type === 'page') {
-                requestData = $.extend({"page.page": this.page , "page.size" : self.options.size}, this.options.requestData);
+                requestData = $.extend({"page.page": this.page , "page.size" : self.options.size}, this.requestData);
             } else {
-                requestData = $.extend({"lastFlowNum": this.lastFlowNum}, this.options.requestData);
+                requestData = $.extend({"lastFlowNum": this.lastFlowNum}, this.requestData);
             }
             $.lily.ajax({url: this.options.url,
                 data: requestData,
