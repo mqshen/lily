@@ -10,6 +10,7 @@
         var self = this
         this.$backdrop           = null
         this.$body               = $(document.body)
+        if(this.$element.attr("ajax")) this.options.ajax = true
         this.$element.submit(function(e) {
             if(!self.checkData()) {
                 e.preventDefault();
