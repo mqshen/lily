@@ -695,9 +695,6 @@
 				else {
 					temp = $.lily.format.addComma(integerCash) + '.' + decimalCash;
 				}
-				if(temp=="0.00"){
-					return '';
-				}
 				return temp;
 			}
 		},
