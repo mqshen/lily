@@ -5380,7 +5380,7 @@ $.extend( $.lily, {
                     + '<div class="table_wrapper"><div class="cell_wrapper">'
                     + '<img class="enlarged" src = "' + $this.attr("data-content") + '" data-width="' + $this.attr("data-width")
                     + '" data-height="' + $this.attr("data-height") + '">'
-                    + '</div><div class="view-photo-content"><span class="view-photo-c" id="image-desc">' + content + '</span></div></div>'
+                    + '</div></div><div class="view-photo-content"><span class="view-photo-c" id="image-desc">' + content + '</span></div>'
                     + '</figure>')
                 self.$imageViewer.append($largeImage)
                 var $smallImage = $('<td ><img id="small_image_' + id + '" class="" src="' + $this.attr("src") + '" title="" ></td>')
