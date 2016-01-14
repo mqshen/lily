@@ -5376,12 +5376,16 @@ $.extend( $.lily, {
                 })
                 var id = $this.attr("id")
                 var content = $this.attr("alt")
-                var $largeImage = $('<figure id="enlarged_image_' + id + '" style="display:none;">'
-                    + '<div class="table_wrapper"><div class="cell_wrapper">'
-                    + '<img class="enlarged" src = "' + $this.attr("data-content") + '" data-width="' + $this.attr("data-width")
-                    + '" data-height="' + $this.attr("data-height") + '">'
-                    + '</div></div><div class="view-photo-content"><span class="view-photo-c" id="image-desc">' + content + '</span></div>'
-                    + '</figure>')
+                var contentHtml = '<figure id="enlarged_image_' + id + '" style="display:none;">'
+                                  + '<div class="table_wrapper"><div class="cell_wrapper">'
+                                  + '<img class="enlarged" src = "' + $this.attr("data-content") + '" data-width="' + $this.attr("data-width")
+                                  + '" data-height="' + $this.attr("data-height") + '">'
+                                  + '</div></div>'
+                if(content && content.length > 0) {
+                    contentHtml += '<div class="view-photo-content"><span class="view-photo-c" id="image-desc">' + content + '</span></div>'
+                }
+                contentHtml += '</figure>'
+                var $largeImage = $(contentHtml)
                 self.$imageViewer.append($largeImage)
                 var $smallImage = $('<td ><img id="small_image_' + id + '" class="" src="' + $this.attr("src") + '" title="" ></td>')
                 self.$smallView.append($smallImage)
