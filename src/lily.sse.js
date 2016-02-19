@@ -4,7 +4,7 @@
 
     var SSE = function(element, options) {
         this.$element = $(element);
-        this.options = $.extend({}, $.fn.SSE.defaults, options);
+        this.options = $.extend({}, $.fn.sse.defaults, options);
         this.init();
     }
 
@@ -156,7 +156,7 @@
         });
     }
 
-    $.fn.SSE.defaults = {
+    $.fn.sse.defaults = {
         onOpen: function () {
         },
         onEnd: function () {
