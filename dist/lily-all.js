@@ -2318,29 +2318,32 @@ $.extend( $.lily, {
   }
 
   Button.prototype.toggle = function () {
-    var changed = true
-    var $parent = this.$element.closest('[data-toggle="buttons"]')
+      var changed = true
+      var $parent = this.$element.closest('[data-toggle="buttons"]')
 
-    if ($parent.length) {
-      var $input = this.$element.find('input')
-      if ($input.prop('type') == 'radio') {
-        if ($input.prop('checked')) changed = false
-        $parent.find('.active').removeClass('active')
-        this.$element.addClass('active')
-      } else if ($input.prop('type') == 'checkbox') {
-        if(this.maxSelector && $parent.find('.active').length >= this.maxSelector && !this.$element.hasClass('active')) {
-          return;
+      if ($parent.length) {
+        var $input = this.$element.find('input')
+        if ($input.prop('type') == 'radio') {
+          $parent.find('.active').removeClass('active')
+          if ($input.prop('checked')) {
+            $input.prop('checked', false)
+          } else {
+            this.$element.addClass('active')
+          }
+        } else if ($input.prop('type') == 'checkbox') {
+          if(this.maxSelector && $parent.find('.active').length >= this.maxSelector && !this.$element.hasClass('active')) {
+            return;
+          }
+          if (($input.prop('checked')) !== this.$element.hasClass('active')) changed = false
+          this.$element.toggleClass('active')
         }
-        if (($input.prop('checked')) !== this.$element.hasClass('active')) changed = false
+        $input.prop('checked', this.$element.hasClass('active'))
+        if (changed) $input.trigger('change')
+      } else {
+        this.$element.attr('aria-pressed', !this.$element.hasClass('active'))
         this.$element.toggleClass('active')
       }
-      $input.prop('checked', this.$element.hasClass('active'))
-      if (changed) $input.trigger('change')
-    } else {
-      this.$element.attr('aria-pressed', !this.$element.hasClass('active'))
-      this.$element.toggleClass('active')
     }
-  }
 
 
   Button.prototype.active = function () {
@@ -2398,7 +2401,7 @@ $.extend( $.lily, {
   // ===============
 
   $(document)
-    .on('click.bs.button.data-api', '[data-toggle^="button"]', function (e) {
+    .on('click.bs.button.data-api', '[data-toggle="button"]', function (e) {
       var $btn = $(e.target)
       if (!$btn.hasClass('btn')) $btn = $btn.closest('.btn')
       Plugin.call($btn, 'toggle')
@@ -2409,7 +2412,6 @@ $.extend( $.lily, {
     })
 
 }(jQuery);
-
 
 /**
  * jQuery validator - v1.0
