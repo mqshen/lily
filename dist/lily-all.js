@@ -1956,9 +1956,13 @@ $.extend( $.lily, {
                 if(self.options.summary && responseData.summary && responseData.summary.length > 0) {
                     $(self.options.summary).empty().append($(responseData.summary))
                 }
-                if(self.page * self.options.size > self.totalElement || !self.totalElement) {
-                    self.hasMore = false;
-                    self.$appendTo.append('<div class="no-more "><span>暂无更多数据</span></div>');
+                if(self.options.type === 'page' && self.totalElement === 0) { 
+                    self.$appendTo.addClass("no-data") 
+                } else {
+                    if(self.page * self.options.size > self.totalElement || !self.totalElement) {
+                        self.hasMore = false;
+                        self.$appendTo.append('<div class="no-more "><span>暂无更多数据</span></div>');
+                    }
                 }
                 $(".loading").hide();
                 self.loading = false;
@@ -1967,9 +1971,6 @@ $.extend( $.lily, {
                     var temp = {}
                     temp[name] = responseData[name] 
                     self.requestData = $.extend(temp, self.requestData) 
-                }
-                if(self.options.type === 'page' && self.totalElement === 0) { 
-                    self.$appendTo.addClass("no-data") 
                 }
             }
             var requestData ;
