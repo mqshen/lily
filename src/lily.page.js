@@ -71,6 +71,9 @@
                     temp[name] = responseData[name] 
                     self.requestData = $.extend(temp, self.requestData) 
                 }
+                if(self.options.type === 'page' && self.totalElement === 0) { 
+                    self.$appendTo.addClass("no-data") 
+                }
             }
             var requestData ;
             if(self.options.type === 'page') {
