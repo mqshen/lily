@@ -60,7 +60,7 @@
                     $(self.options.summary).empty().append($(responseData.summary))
                 }
                 if(self.options.type === 'page' && self.totalElement === 0) { 
-                    self.$appendTo.addClass("no-data") 
+                    self.$appendTo.parent().addClass("no-data") 
                 } else {
                     if(self.page * self.options.size > self.totalElement || !self.totalElement) {
                         self.hasMore = false;
