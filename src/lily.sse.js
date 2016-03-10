@@ -35,7 +35,7 @@
             }
             var self = this
             $.ajax({
-                url: this.options.url,
+                url: this.options.ajaxUrl,
                 method: 'GET',
                 headers: {'Last-Event-ID': self.instance.id},
                 success: function (receivedData, status, info) {
@@ -47,68 +47,16 @@
                         self.onOpen();
                     }
 
-                    var lines = receivedData.split("\n");
+                    var eventMessage = {
+                        data: receivedData,
+                        lastEventId: self.instance.id,
+                        origin: 'http://' + info.getResponseHeader('Host'),
+                        returnValue: true
+                    };
 
-                    // Process the return to generate a compatible SSE response
-                    self.instance.data = "";
-                    var countBreakLine = 0;
-                    for (var key in lines) {
-                        var separatorPos = lines[key].indexOf(":");
-                        var item = [
-                            lines[key].substr(0, separatorPos),
-                            lines[key].substr(separatorPos + 1)
-                        ];
-                        switch (item[0]) {
-                            // If the first part is empty, needed to check another sequence
-                            case "":
-                                if (!item[1] && countBreakLine++ === 1) {  // Avoid comments!
-                                    var eventMessage = {
-                                        data: self.instance.data,
-                                        lastEventId: self.instance.id,
-                                        origin: 'http://' + info.getResponseHeader('Host'),
-                                        returnValue: true
-                                    };
+                    // If there are a custom event then call it
+                    self._settings.onMessage(eventMessage);
 
-                                    // If there are a custom event then call it
-                                    if (self.instance.event && self._settings.events[self.instance.event]) {
-                                        self._settings.events[self.instance.event](eventMessage);
-                                    } else {
-                                        self._settings.onMessage(eventMessage);
-                                    }
-                                    self.instance.data = "";
-                                    self.instance.event = "";
-                                    countBreakLine = 0;
-                                }
-                                break;
-
-                                // Define the new retry object;
-                            case "retry":
-                                countBreakLine = 0;
-                                self.instance.retry = parseInt(item[1].trim(), 10);
-                                break;
-
-                                // Define the new ID
-                            case "id":
-                                countBreakLine = 0;
-                                self.instance.id = item[1].trim();
-                                break;
-
-                                // Define a custom event
-                            case "event":
-                                countBreakLine = 0;
-                                self.instance.event = item[1].trim();
-                                break;
-
-                                // Define the data to be processed.
-                            case "data":
-                                countBreakLine = 0;
-                                self.instance.data += (self.instance.data !== "" ? "\n" : "") + item[1].trim();
-                                break;
-
-                            default:
-                                countBreakLine = 0;
-                        }
-                    }
                     setTimeout(function () {
                         self.runAjax();
                     }, self.instance.retry);
@@ -171,3 +119,4 @@
     $.fn.sse.Constructor = SSE
 
 }(window.jQuery);
+
