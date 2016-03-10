@@ -43,10 +43,6 @@
                         return;
                     }
 
-                    if (self.instance.successCount++ === 0) {
-                        self.onOpen();
-                    }
-
                     var eventMessage = {
                         data: receivedData,
                         lastEventId: self.instance.id,
@@ -55,7 +51,7 @@
                     };
 
                     // If there are a custom event then call it
-                    self._settings.onMessage(eventMessage);
+                    self.options.onMessage(eventMessage);
 
                     setTimeout(function () {
                         self.runAjax();
