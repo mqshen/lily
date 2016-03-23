@@ -547,13 +547,22 @@ $.extend( $.lily, {
                 checkResult.passed = false
             }
             if(!checkResult.passed) {
-                this.$submitButton.attr("disabled", false)
-                if(disableText)
-                    this.$submitButton.text(this.oldText)
+                this.resetButton()
                 return false;
             }
 
+            if(this.options.formCheck && !this.options.formCheck()) {
+                this.resetButton()
+                return false;
+            }
             return checkResult.requestData
+        },
+
+        resetButton: function() {
+            var disableText = this.$submitButton.attr("data-disable-with")
+            this.$submitButton.attr("disabled", false)
+            if(disableText)
+                this.$submitButton.text(this.oldText)
         },
 
         submit: function() {
@@ -642,6 +651,7 @@ $.extend( $.lily, {
         e.stopPropagation();
     })
 }(window.jQuery);
+
 
 
 
