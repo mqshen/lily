@@ -577,7 +577,9 @@ $.extend( $.lily, {
             function processResponse(responseData) {
                 var e  = $.Event('lily.form:submit', { responseData: responseData})
                 self.$element.trigger(e)
-                self.resetForm()
+                if(!self.options.unRefresh) {
+                    self.resetForm()
+                }
             }
 
             function resetButton() {
