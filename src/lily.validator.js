@@ -247,7 +247,7 @@
                     if ( fieldConfig.chineseDisplay ) {
                         $('#' + fieldConfig.chineseDisplay, currentElement).text( $.lily.format.toChineseCash(value) );
                     }
-                    var formatCurrency = $.lily.format.toCashWithComma( value, false, 2 );
+                    var formatCurrency = $.lily.format.toCashWithComma( value, true, 2 );
                     fieldConfig.$element.val(formatCurrency);
                 } ),
                 afterFail : ( function( value, fieldConfig,currentElement ){
