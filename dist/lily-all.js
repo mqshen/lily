@@ -2463,7 +2463,7 @@ $.extend( $.lily, {
 		 */
 		LANGUAGE_ACCOUNT : "{%name}为" + $.lily.validator.ACCOUNTNO_MIN + "位至" + $.lily.validator.ACCOUNTNO_MAX + "位的数字",
 		LANGUAGE_SELECT : "请选择{%name}",
-		LANGUAGE_REQUEST_INPUT : "请输入{%name}，此为必输项",
+		LANGUAGE_REQUEST_INPUT : "请输入{%name}",
 		LANGUAGE_DATA_ILLEGAL : "请输入合法的{%name}",
 		LANGUAGE_SHORTER_THAN_MIN_LENGTH : "{%name}长度不能小于{%minLength}个字符",
 		LANGUAGE_LONGER_THAN_MAX_LENGTH : "{%name}长度不能大于{%maxLength}个字符",
