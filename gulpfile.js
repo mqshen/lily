@@ -30,7 +30,8 @@ gulp.task('concat', function(){
       './src/lily.select.js',
       './src/lily.fileupload.js',
       './src/lily.imageView.js',
-      './src/lily.sse.js'
+      './src/lily.sse.js',
+      './src/lily.cookie.js'
       ])
         .pipe(concat('lily-all.js'))
         .pipe(gulp.dest('./dist/'));
