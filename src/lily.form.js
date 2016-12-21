@@ -90,6 +90,8 @@
                 }
             }
 
+            $('#page_back_field').val("1")
+
             function resetButton() {
                 self.$submitButton.attr("disabled", false)
                 self.removeBackdrop()
