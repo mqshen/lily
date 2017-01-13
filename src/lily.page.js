@@ -69,11 +69,19 @@
                 }
                 $(".loading").hide();
                 self.loading = false;
-                if(self.options.appendRequestData) { 
-                    var name = self.options.appendRequestData 
-                    var temp = {}
-                    temp[name] = responseData[name]
-                    self.requestData = $.extend(self.requestData, temp)
+				if(self.options.appendRequestData) {
+                    if($.isArray(self.options.appendRequestData)) {
+                        for(var name in self.options.appendRequestData) {
+                            var temp = {}
+                            temp[name] = responseData[name]
+                            self.requestData = $.extend(self.requestData, temp)
+                        }
+                    } else {
+                        var name1 = self.options.appendRequestData
+                        var temp1 = {}
+                        temp1[name1] = responseData[name1]
+                        self.requestData = $.extend(self.requestData, temp1)
+                    }
                 }
             }
             var requestData ;
