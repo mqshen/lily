@@ -71,11 +71,12 @@
                 self.loading = false;
 				if(self.options.appendRequestData) {
                     if($.isArray(self.options.appendRequestData)) {
-                        for(var name in self.options.appendRequestData) {
-                            var temp = {}
+                        var temp = {}
+                        for(var i = 0;i < self.options.appendRequestData.length; ++i) {
+                            var name = self.options.appendRequestData[i]
                             temp[name] = responseData[name]
-                            self.requestData = $.extend(self.requestData, temp)
                         }
+                        self.requestData = $.extend(self.requestData, temp)
                     } else {
                         var name1 = self.options.appendRequestData
                         var temp1 = {}
