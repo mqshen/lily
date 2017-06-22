@@ -46,6 +46,8 @@
             }
 
             this.oldText = this.$submitButton.text()
+            if(this.$submitButton.attr("disabled"))
+                return false;
             var disableText = this.$submitButton.attr("data-disable-with")
             this.$submitButton.attr("disabled",true)
             if(disableText)
