@@ -49,7 +49,7 @@
 
 
             var disableText = this.$submitButton.attr("data-disable-with")
-            this.$submitButton.attr("disabled",true)
+            this.$submitButton.prop("disabled",true)
             if(disableText)
                 this.$submitButton.text(disableText)
             var checkResult = this.$element.data('validator').check();
@@ -70,7 +70,7 @@
 
         resetButton: function() {
             var disableText = this.$submitButton.attr("data-disable-with")
-            this.$submitButton.attr("disabled", false)
+            this.$submitButton.prop("disabled", false)
             if(disableText)
                 this.$submitButton.text(this.oldText)
         },
@@ -95,7 +95,7 @@
             $('#page_back_field').val("1")
 
             function resetButton() {
-                self.$submitButton.attr("disabled", false)
+                self.$submitButton.prop("disabled", false)
                 self.removeBackdrop()
                 if(disableText)
                     self.$submitButton.text(self.oldText)
@@ -125,7 +125,7 @@
 
         resetForm: function() {
             var disableText = this.$submitButton.attr("data-disable-with")
-            this.$submitButton.attr("disabled", false)
+            this.$submitButton.prop("disabled", false)
             if(disableText) 
                 this.$submitButton.text(this.oldText)
             if(this.$element.attr("data-save"))
