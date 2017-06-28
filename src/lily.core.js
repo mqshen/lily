@@ -111,7 +111,7 @@ $.extend( $.lily, {
 			    else {
 			    	$.lily.showTips(data.errorMsg);
 					if(errorCallback) {
-						errorCallback();
+						errorCallback(data);
 					}
 			    }
 			}

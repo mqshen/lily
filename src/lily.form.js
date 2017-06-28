@@ -94,11 +94,13 @@
 
             $('#page_back_field').val("1")
 
-            function resetButton() {
+            function resetButton(data) {
                 self.$submitButton.prop("disabled", false)
                 self.removeBackdrop()
                 if(disableText)
                     self.$submitButton.text(self.oldText)
+                if(data.token)
+                    $('[name=csrf_token]').val(data.token)
             }
 
             var pjaxContainer = this.$element.attr("data-pjax");

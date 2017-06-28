@@ -111,7 +111,7 @@ $.extend( $.lily, {
 			    else {
 			    	$.lily.showTips(data.errorMsg);
 					if(errorCallback) {
-						errorCallback();
+						errorCallback(data);
 					}
 			    }
 			}
@@ -542,7 +542,7 @@ $.extend( $.lily, {
 
 
             var disableText = this.$submitButton.attr("data-disable-with")
-            this.$submitButton.attr("disabled",true)
+            this.$submitButton.prop("disabled",true)
             if(disableText)
                 this.$submitButton.text(disableText)
             var checkResult = this.$element.data('validator').check();
@@ -563,7 +563,7 @@ $.extend( $.lily, {
 
         resetButton: function() {
             var disableText = this.$submitButton.attr("data-disable-with")
-            this.$submitButton.attr("disabled", false)
+            this.$submitButton.prop("disabled", false)
             if(disableText)
                 this.$submitButton.text(this.oldText)
         },
@@ -587,11 +587,13 @@ $.extend( $.lily, {
 
             $('#page_back_field').val("1")
 
-            function resetButton() {
-                self.$submitButton.attr("disabled", false)
+            function resetButton(data) {
+                self.$submitButton.prop("disabled", false)
                 self.removeBackdrop()
                 if(disableText)
                     self.$submitButton.text(self.oldText)
+                if(data.token)
+                    $('[name=csrf_token]').val(data.token)
             }
 
             var pjaxContainer = this.$element.attr("data-pjax");
@@ -618,7 +620,7 @@ $.extend( $.lily, {
 
         resetForm: function() {
             var disableText = this.$submitButton.attr("data-disable-with")
-            this.$submitButton.attr("disabled", false)
+            this.$submitButton.prop("disabled", false)
             if(disableText) 
                 this.$submitButton.text(this.oldText)
             if(this.$element.attr("data-save"))
