@@ -5,12 +5,12 @@
  * website: shenmq.github.com
  *
  */
-  
+
 (function( $, undefined ){
     "use strict";
-	
+
 	$.lily.validator = $.lily.validator || {};
-	
+
 	$.extend( $.lily.validator, {
 		/*
 		 * 常量
@@ -19,13 +19,13 @@
 		ACCOUNTNO_MAX : 21, 		//账号最大长度
 		CURRENCY_MAX : 18,			//金额最大长度
 		CURRENCY_NO_DOT : false,	//后台存储的金额是否没有小数点
-		
+
 
 		failStop : false,			// 是否在第一次校验失败后就停止校验
 		countByChar : true,
 		tipContainer : null		//tipContainer
 	});
-	
+
 	$.extend( $.lily.validator, {
 		/*
 		 * 多语言资源模板定义：其中{%name}表示被校验项的名称
@@ -55,7 +55,7 @@
 		LANGUAGE_ENDDATE_ILLEGAL : "日期范围不能超过3个月",
 		LANGUAGE_LESS_THAN_START:"开始日期不能晚于结束日期"
 	});
-	
+
 	$.extend( $.lily.validator, {
 		/**
 	     * 内置的数据类型定义
@@ -347,7 +347,7 @@
 	            valueTester : ( function( value ){
 	                return ( $.lily.format.isPhone(value) );
 	            } )
-	        },    
+	        },
 	        'fax':{
 	            errorTemplet:$.lily.validator.LANGUAGE_DATA_ILLEGAL,
 	            valueTester : ( function( value ){
@@ -381,7 +381,7 @@
 	        				return false;
 	        			else if(newPwd!=confirmPwd)
 	        				return false;
-	        			else 
+	        			else
 	        				return true;
 	        		}
 	        	}
@@ -414,9 +414,9 @@
 	            })
 	        }
 	    },
-		
+
 		_dataAccesser : function(fieldConfig) {
-			
+
 			if (fieldConfig.isExtra) {
 				return null;
 			}
@@ -426,7 +426,7 @@
 					return typeDefine.output(fieldConfig);
 				}
 			}
-			
+
 			if (fieldConfig.$element == null) {
 				alert( "Validator: Field["+fieldConfig.id+"] not found in html!" );
 				return null;
@@ -437,11 +437,11 @@
 			}
 			return fieldValue;
 		},
-		
+
 		_errorHandler : function(errors) {
             errors;
 		},
-		
+
 		_requiredValidator : function(fieldValue, fieldConfig) {
 
 			//radio一定检查是否选中
@@ -468,14 +468,14 @@
 				if (fieldConfig.require) {
 					this._errorCount++;
 					return $.lily.validator._getErrorMessage( fieldConfig, $.lily.validator.LANGUAGE_REQUEST_INPUT );
-				} 
+				}
 				else {
 					return false;	//如果没有输入内容，则不再进行后续检验
 				}
 			}
 			return true;
 		},
-		
+
 		_lengthValidator : function(fieldValue, fieldConfig) {
 
 			if ( fieldConfig.minLength!=null || fieldConfig.maxLength!=null || fieldConfig.length!=null){
@@ -490,10 +490,10 @@
 						var charCode = fieldValue.charCodeAt(index);
 						if (charCode < 0x007f) {
 							inputLength ++;
-						} 
+						}
 						else if ((0x0080 <= charCode) && (charCode <= 0x07ff)) {
 							inputLength += 2;
-						} 
+						}
 						else if ((0x0800 <= charCode) && (charCode <= 0xffff)) {
 							inputLength += 3;
 						}
@@ -511,7 +511,7 @@
 			}
 			return true;
 		},
-		
+
 		_valueRangeValidator : function(fieldValue, fieldConfig) {
 			if (fieldConfig.startDate!=null ){
 				// 字符串去掉,并转换为浮点数
@@ -541,7 +541,7 @@
 				if ( typeDefine ){
 					if ( typeDefine.valueTester ){
 						result = typeDefine.valueTester(fieldValue);
-					} 
+					}
 					else if ( typeDefine.fieldTester ){
 						result = typeDefine.fieldTester(fieldConfig);
 					}
@@ -556,12 +556,12 @@
 					}
 				}
 				else {
-					alert( "$.lily.Validator: Datatype["+fieldConfig.type+"] not supported!" );	
-				}	
+					alert( "$.lily.Validator: Datatype["+fieldConfig.type+"] not supported!" );
+				}
 			}
 			return true;
 		},
-		
+
 		_regexpValidator : function(fieldValue, fieldConfig) {
 
 			if ( fieldConfig.regexp!=null ){
@@ -572,7 +572,7 @@
 			}
 			return true;
 		},
-		
+
 		_equalToValidator : function(fieldValue, fieldConfig ) {
 			// 检查是否和指定域的值相等或不等
 			if ( fieldConfig.equalTo || fieldConfig.notEqualTo ){
@@ -588,7 +588,7 @@
 			}
 			return true;
 		},
-		
+
         /*
 		_checkerValidator : function(fieldValue, fieldConfig) {
 			// 自定义的校验函数
@@ -596,20 +596,20 @@
 				var chekerResult = eval(fieldConfig.checker + "(fieldConfig, fieldValue, currentElement)");
 				if ( chekerResult !== true ){
 					var errorTemplet = ( chekerResult === false ) ? $.lily.validator.LANGUAGE_DATA_ILLEGAL : chekerResult;
-					return $.lily.validator._getErrorMessage( fieldConfig, errorTemplet ); 
+					return $.lily.validator._getErrorMessage( fieldConfig, errorTemplet );
 				}
 			}
 			return true;
 		},
         */
-		
+
 		_relatedValidator : function(fieldValue, fieldConfig) {
-		
+
 			if ($.isArray(fieldConfig.related) && this._relatedCheckDepth < 5) {
 				this._relatedCheckDepth ++;
 				try {
 					this.checkFields(fieldConfig.related);
-				} 
+				}
 				catch (e) {
 					return false;
 				}
@@ -617,7 +617,7 @@
 			}
 			return true;
 		},
-		
+
 		_commonReset: function(fieldConfig, currentElement) {
 			if ( fieldConfig.type!=null ) {
 				var typeDefine = $.lily.validator._typeDefine[fieldConfig.type];
@@ -628,7 +628,7 @@
 				}
 			}
 		},
-		
+
 		/**
 		* 根据模板生成要显示的错误信息
 		* @private
@@ -637,12 +637,12 @@
 		* @returns {string} 生成的错误信息
 		*/
 		_getErrorMessage : function( config, templet, ignoreCustom ){
-			
+
 			// 使用自定义的提示信息模板
 			if (!ignoreCustom && config.templet != null) {
 				templet = config.templet;
 			}
-			
+
 			if ( window.Ln ){
 				templet = window.Ln.g( templet, config );
 			}
@@ -663,7 +663,7 @@
 	});
 
 	"use strict"
-	
+
 	var Validator = function (element, options) {
 		this.$element = $(element);
 		this.options = options;
@@ -683,9 +683,9 @@
 				    var checkFun = function() {
                         var result = self.checkRule(config);
                         if ( !result.passed ) {
-                            if(self.options.showErrorInWindow)
+                            if(self.options.showErrorInWindow & 1)
                                 self.addErrors(result);
-                            else
+                            if(self.options.showErrorInWindow & 2)
                                 self.showError($this, result.error)
                         }
                         else {
@@ -700,19 +700,19 @@
 			}
 		});
 	}
-	
+
 	Validator.prototype = {
 		constructor: Validator,
-		
+
 		addRule: function(config) {
 			config.id = config.$element.attr("name")
 			if ( !config.id ){
 				alert( "Validator: Field id must be set!" );
 				return;
 			}
-			
+
 			config.key = config.id;
-			
+
 			this._rules.push(config);
 		},
 
@@ -722,7 +722,7 @@
 			var signData = [];
 			for(var i = 0,size = this._rules.length;i < size; ++i) {
 				var rule = this._rules[i];
-				if(rule.$element.hasClass("disabled")) 
+				if(rule.$element.hasClass("disabled"))
 					continue;
 				var result = this.checkRule(rule);
 				if ( result.passed ) {
@@ -733,15 +733,16 @@
 				}
 				else {
 					errors.push(result);
-					if(!this.options.showErrorInWindow) {
+					if(this.options.showErrorInWindow & 1) {
 						this.showError(rule.$element, result.error)
-					} else {
+					}
+          if(this.options.showErrorInWindow & 2){
 						this.addErrorTag(rule.$element, result.error);
 					}
 
 				}
 			}
-			if (errors.length > 0 && this.options.showErrorInWindow) {
+			if (errors.length > 0 && this.options.showErrorInWindow & 1) {
 				this.addErrors(errors);
 			}
 
@@ -798,7 +799,7 @@
 			htmlStr += "</ul>";
 			var errorHtmlObj = $(htmlStr);
 			$.openWindow({
-				backdrop: false, 
+				backdrop: false,
 				content: errorHtmlObj,
 				allowMinimize: false,
 				windowClass: 'error-show',
@@ -809,31 +810,31 @@
 			});
 			*/
 		},
-		
+
 		checkRule: function(rule) {
-			
+
 			var key = rule.key;
 			var dataAccesser = $.isFunction(rule.dataAccesser) ? rule.dataAccesser : this.options.dataAccesser;
 			var validators = rule.validator;
 			var ignoreCommonValidators = rule.ignoreCommonValidators;
 			var enabled = rule.enabled;
-			
+
 			if (enabled === false) {
 				return;
 			}
-			
+
 			if (!$.isFunction(dataAccesser))
 				return;
-			
+
 			var data = dataAccesser(rule);
-			
+
 			var commonValidators = this.options.commonValidators;
             var result;
 			if (commonValidators && !ignoreCommonValidators) {
 				var commonSize = commonValidators.length;
 				for (var i=0; i<commonSize; i++) {
 					var commonValidator = commonValidators[i];
-					
+
 					if ($.isFunction(commonValidator)) {
 					    result = commonValidator.call(this, data, rule, this.$element);
 						if (result === undefined || result == null || result === false) {
@@ -857,14 +858,14 @@
 					}
 				}
 			}
-			
+
 			if (!$.isArray(validators)) {
 				validators = [validators];
 			}
 			var size = validators.length
 			for (var j=0; j<size; j++) {
 				var validator = validators[j];
-				
+
 				if ($.isFunction(validator)) {
 					result = validator(data, rule);
 					if (result === undefined || result == null || result === false) {
@@ -895,7 +896,7 @@
 				rule : rule
 			};
 		},
-		
+
 		reset: function() {
 			for(var i = 0,size = this._rules.length;i < size; ++i) {
 				var rule = this._rules[i];
@@ -903,19 +904,19 @@
 			}
 		}
 	}
-	
+
 	$.fn.validator = function ( option ) {
 		return this.each(function () {
-      		var $this = $(this), 
-      			data = $this.data('validator'), 
+      		var $this = $(this),
+      			data = $this.data('validator'),
       			options = $.extend({}, $.fn.validator.defaults, $this.data(), typeof option == 'object' && option);
-      		if (!data) 
+      		if (!data)
       			$this.data('validator', (data = new Validator(this, options)));
     	});
 	}
-	
+
 	$.fn.validator.defaults = {
-		showErrorInWindow: true,
+		showErrorInWindow: 3,
 		dataAccesser : $.lily.validator._dataAccesser ,
 		errorHandler : $.lily.validator._errorHandler ,
 		commonValidators : [
@@ -928,8 +929,7 @@
 		    $.lily.validator._relatedValidator
 		]
 	}
-	
-	$.fn.validator.Constructor = Validator;
-	
-})( window.jQuery );
 
+	$.fn.validator.Constructor = Validator;
+
+})( window.jQuery );
