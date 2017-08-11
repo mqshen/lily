@@ -3133,7 +3133,7 @@ $.extend( $.lily, {
                             if(self.options.showErrorInWindow & 1)
                                 self.addErrors(result);
                             if(self.options.showErrorInWindow & 2)
-                                self.showError($this, result.error)
+                                self.showError($this)
                         }
                         else {
                             self.hideError($this)
@@ -3181,7 +3181,7 @@ $.extend( $.lily, {
 				else {
 					errors.push(result);
 					if(this.options.showErrorInWindow & 1) {
-						this.showError(rule.$element, result.error)
+						this.showError(rule.$element)
 					}
           if(this.options.showErrorInWindow & 2){
 						this.addErrorTag(rule.$element, result.error);
@@ -3201,16 +3201,16 @@ $.extend( $.lily, {
 		},
 
 		hideError: function(element) {
-            element.attr("placeholder", element.attr("old-placeholder"));
+      //element.attr("placeholder", element.attr("old-placeholder"));
 			element.removeClass("op-error shake");
 		},
 
-		showError: function(element, message) {
+		showError: function(element) {
 			this.hideError(element)
-
-            if(!element.attr("old-placeholder"))
-                element.attr("old-placeholder", element.attr("placeholder"))
-            element.addClass('op-error shake').attr('placeholder', message);
+      //if(!element.attr("old-placeholder"))
+      // element.attr("old-placeholder", element.attr("placeholder"))
+      element.addClass('op-error shake')
+      //.attr('placeholder', message);
 			//element.after('<span class="error">' + message + '</span>')
 		},
 		addErrorTag: function(element, message) {
@@ -3231,7 +3231,7 @@ $.extend( $.lily, {
 			else {
 				errorMessage += errors.error ;
 			}
-            $.lily.showTips(errorMessage);
+      $.lily.showTips(errorMessage);
 			/*
 			var htmlStr = "<ul>";
 
@@ -3378,6 +3378,11 @@ $.extend( $.lily, {
 	}
 
 	$.fn.validator.Constructor = Validator;
+
+  $(document).on('focus.validator.data-api', 'input,textarea,[data-validate]', function (e) {
+      var $btn = $(e.target)
+      $btn.removeClass('op-error shake')
+  })
 
 })( window.jQuery );
 
