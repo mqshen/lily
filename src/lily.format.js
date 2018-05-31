@@ -342,7 +342,7 @@
 		            + parseInt(s.charAt(7), 10) * 1
 		            + parseInt(s.charAt(8), 10) * 6
 		            + parseInt(s.charAt(9), 10) * 3 ;
-		        if ( s.charAt(17) != "10X98765432".charAt( testNumber % 11 ) ){
+		        if ( s.charAt(17).toUpperCase() != "10X98765432".charAt( testNumber % 11 ) ){
 		            return false;
 		        }
 		    }

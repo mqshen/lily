@@ -1008,7 +1008,7 @@ $.extend( $.lily, {
 		            + parseInt(s.charAt(7), 10) * 1
 		            + parseInt(s.charAt(8), 10) * 6
 		            + parseInt(s.charAt(9), 10) * 3 ;
-		        if ( s.charAt(17) != "10X98765432".charAt( testNumber % 11 ) ){
+		        if ( s.charAt(17).toUpperCase() != "10X98765432".charAt( testNumber % 11 ) ){
 		            return false;
 		        }
 		    }
@@ -2480,14 +2480,14 @@ $.extend( $.lily, {
 		LANGUAGE_ACCOUNT : "{%name}为" + $.lily.validator.ACCOUNTNO_MIN + "位至" + $.lily.validator.ACCOUNTNO_MAX + "位的数字",
 		LANGUAGE_SELECT : "请选择{%name}",
 		LANGUAGE_REQUEST_INPUT : "请输入{%name}",
-		LANGUAGE_DATA_ILLEGAL : "请输入合法的{%name}",
+		LANGUAGE_DATA_ILLEGAL : "请输入正确的{%name}",
 		LANGUAGE_SHORTER_THAN_MIN_LENGTH : "{%name}长度不能小于{%minLength}个字符",
 		LANGUAGE_LONGER_THAN_MAX_LENGTH : "{%name}长度不能大于{%maxLength}个字符",
 		LANGUAGE_LENGTH_NOT_EQUAL : "{%name}长度必须为{%length}",
 		LANGUAGE_LESS_THAN_MIN_VALUE : "{%name}不能小于{%minValue}",
 		LANGUAGE_GREATER_THAN_MAX_VALUE : "{%name}不能大于{%maxValue}",
 		LANGUAGE_DATATYPE_NOT_INTEGER : "{%name}请输入数字",
-		LANGUAGE_DATATYPE_NOT_DECIMAL : "{%name}请输入合法的浮点数",
+		LANGUAGE_DATATYPE_NOT_DECIMAL : "{%name}请输入正确的浮点数",
 		LANGUAGE_DATATYPE_NOT_CHINESE : "{%name}请输入中文",
 		LANGUAGE_NOT_EQUAL : "两次输入的{%name}不相同",
 		LANGUAGE_EQUAL : "两次输入的{%name}相同",
@@ -2495,9 +2495,9 @@ $.extend( $.lily, {
 		LANGUAGE_GROUP_NOT_ONE : "只需要输入其中一项",
 		LANGUAGE_GROUP_NOT_SINGLE : "必须并且只需输入其中一项",
 		LANGUAGE_GROUP_NO_INPUT : "需要至少输入其中一项",
-		LANGUAGE_PHONE_ILLEGAL : "请输入合法的{%name}，格式为区号-电话号-分机号",
+		LANGUAGE_PHONE_ILLEGAL : "请输入正确的{%name}，格式为区号-电话号-分机号",
 		LANGUAGE_CONFIRMPWD_NO_EQUALS : "确认密码必须和您的新密码相等",
-		LANGUAGE_POSITIVENUMBER_ILLEGAL : "请输入合法的{%name}，格式为大于1的整数",
+		LANGUAGE_POSITIVENUMBER_ILLEGAL : "请输入正确的{%name}，格式为大于1的整数",
 		LANGUAGE_STARTDATE_ILLEGAL : "{%name}不能晚于当前日期",
 		LANGUAGE_ENDDATE_ILLEGAL : "日期范围不能超过3个月",
 		LANGUAGE_LESS_THAN_START:"开始日期不能晚于结束日期"
