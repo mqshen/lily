@@ -3213,9 +3213,9 @@ $.extend( $.lily, {
       //.attr('placeholder', message);
 			//element.after('<span class="error">' + message + '</span>')
 		},
-		addErrorTag: function(element, message) {
+		addErrorTag: function(element) {
 			this.hideError(element)
-			element.addClass('op-error ').attr('placeholder', message);
+			//element.addClass('op-error ').attr('placeholder', message);
 		},
 
 		addErrors: function(errors) {
