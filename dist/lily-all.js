@@ -839,7 +839,7 @@ $.extend( $.lily, {
 		REGEXP_EMAIL : new RegExp(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/),
 		REGEXP_DATE : new RegExp(/(yyyy|mm|dd|hh|mi|ss|ms)/gi),
 		REGEXP_PHONE : new RegExp(/^((0\d{2,3})-)(\d{7,8})(-(\d{1,6}))?$/),
-		REGEXP_MOBILE : new RegExp(/^(0|1[3|4|5|6|7|8])[0-9]{9}$/),
+		REGEXP_MOBILE : new RegExp(/^(0|1)[0-9]{10}$/),
 		REGEXP_FAX : new RegExp(/^((\d{3,4})[ \-])(\d{7,8})([ \*\-](\d{1,6}))?$/),
 		// 验证身份证上的出生时间
 		REGEXP_DATEFORMAT : new RegExp(/^[1|2]\d{3}((0[1-9])|(1[0-2]))((0[1-9])|([1-2][0-9])|(3([0|1])))$/),
