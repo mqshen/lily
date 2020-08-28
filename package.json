@@ -18,7 +18,7 @@
   "homepage": "http://webcomponents.org",
   "devDependencies": {
     "gulp": "3.9.1",
-    "lodash": "3.7.0",
+    "lodash": "4.17.19",
     "lodash._basecopy": "3.0.1",
     "gulp-util": "3.0.4",
     "clone": "1.0.2",
