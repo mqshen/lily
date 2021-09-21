@@ -23,7 +23,7 @@
     "gulp-util": "3.0.4",
     "clone": "1.0.2",
     "clone-stats": "0.0.1",
-    "ansi-regex": "1.1.1",
+    "ansi-regex": "6.0.1",
     "lru-cache": "2.6.1",
     "sigmund": "1.0.0",
     "gulp-concat": "2.5.2",
