@@ -17,7 +17,7 @@
   },
   "homepage": "http://webcomponents.org",
   "devDependencies": {
-    "gulp": "3.9.1",
+    "gulp": "4.0.2",
     "lodash": "3.7.0",
     "lodash._basecopy": "3.0.1",
     "gulp-util": "3.0.4",
@@ -27,7 +27,7 @@
     "lru-cache": "2.6.1",
     "sigmund": "1.0.0",
     "gulp-concat": "2.5.2",
-    "gulp-jshint": "1.10.0",
+    "gulp-jshint": "2.1.0",
     "gulp-uglify": "1.2.0"
   }
 }
